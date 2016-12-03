@@ -29,8 +29,8 @@ cat .Xresources $(cat $SCHEME) | while read line; do
 
 done
 
-DEFAULT_FONT="Fixed: pixelsize=13: style=semicondensed"
 [ -e $CACHE/font ] || {\
+	DEFAULT_FONT="Fixed: pixelsize=13: style=semicondensed"
 	echo $DEFAULT_FONT > $CACHE/font
 	echo "#define XRES_font \"$DEFAULT_FONT\"" >> $INCLUDE
 }
