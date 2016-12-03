@@ -14,7 +14,7 @@
  	@echo "CC       = ${CC}"
  
 -config.h:
-+config.h: config.def.h $(SCHEME)
++config.h: config.def.h /tmp/xcolorsha
  	cp config.def.h config.h
  
  .c.o:

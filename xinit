@@ -4,14 +4,15 @@ set -e
 CACHE=$HOME/.cache/xcolors
 mkdir -p $CACHE
 
-export SCHEME=$CACHE/.sha
 INCLUDE=$HOME/include/xres.h
 
 xscheme=${1-xcolors/kirino}
 xschemesum=$(sha1sum $xscheme | awk '{print $1}')
-[ ! -e $SCHEME ] || [ ! "`cat $SCHEME`" == "$xschemesum" ]
+export SCHEME=$CACHE/.sha
 
-echo $xschemesum > $SCHEME
+[ -e $SCHEME ] && [ "`cat $SCHEME`" == "$xschemesum" ] && exit 2
+echo $xschemesum > /tmp/xcolorsha
+
 rm -f $CACHE/* $XRES_H $HOME/.Xresources $INCLUDE
 
 echo -en "#!/bin/ksh\ncat $CACHE/\$1" > $HOME/bin/xget
@@ -71,3 +72,5 @@ si dmenu e90b88e12a88d6214c00d5ee58ceb69446aa5ac4
 si slock 2d2a21a90ad1b53594b1b90b97486189ec54afce
 si st e44832408bb3147826c346872b49de105a4d0e0b
 si surf 6c8da4c851b85c6167f3104158089d9a4fe11ca7
+
+mv /tmp/xcolorsha $SCHEME

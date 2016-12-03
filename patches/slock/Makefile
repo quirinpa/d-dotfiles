@@ -14,7 +14,7 @@
  ${OBJ}: config.h config.mk arg.h util.h
  
 -config.h:
-+config.h: config.def.h $(SCHEME)
++config.h: config.def.h /tmp/xcolorsha
  	@echo creating $@ from config.def.h
  	@cp config.def.h $@
  
