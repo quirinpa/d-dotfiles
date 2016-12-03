@@ -4,19 +4,20 @@ set -e
 CACHE=$HOME/.cache/xcolors
 mkdir -p $CACHE
 
-export SCHEME=$CACHE/.scheme
+export SCHEME=$CACHE/.sha
 INCLUDE=$HOME/include/xres.h
 
 xscheme=${1-xcolors/kirino}
-[ ! -e $SCHEME ] || [ ! $(cat $SCHEME) == $xscheme ]
+xschemesum=$(sha1sum $xscheme | awk '{print $1}')
+[ ! -e $SCHEME ] || [ ! "`cat $SCHEME`" == "$xschemesum" ]
 
-echo $xscheme > $SCHEME
+echo $xschemesum > $SCHEME
 rm -f $CACHE/* $XRES_H $HOME/.Xresources $INCLUDE
 
 echo -en "#!/bin/ksh\ncat $CACHE/\$1" > $HOME/bin/xget
 chmod +x $HOME/bin/xget
 
-cat .Xresources $(cat $SCHEME) | while read line; do
+cat .Xresources $xscheme | while read line; do
 	echo $line >> $HOME/.Xresources
 
 	if [[ $line == \** ]]; then
