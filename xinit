@@ -1,0 +1,34 @@
+#!/bin/ksh
+set -e
+
+COLORSCHEME=${1-xcolors/kirino}
+CACHEDIR=$HOME/.cache/xcolors
+INCLUDEFILE=$HOME/include/xres.h
+
+echo -en "#!/bin/ksh\ncat $CACHEDIR/\$1" > $HOME/bin/xget
+chmod +x $HOME/bin/xget
+
+mkdir -p $CACHEDIR 
+rm -f $CACHEDIR/* $INCLUDEFILE $HOME/.Xresources
+
+cat .Xresources $COLORSCHEME | while read line; do
+	echo $line >> $HOME/.Xresources
+
+	if [[ $line == \** ]]; then
+		echo $line | cut -c 2- | tr -d '\ \t\.' | {
+			IFS=\: read key val
+			echo $val > "$CACHEDIR/$key"
+			echo "#define XRES_$key \"$val\"" >> "$INCLUDEFILE"
+		}
+	fi
+
+done
+
+DEFAULT_FONT="Fixed: pixelsize=13: style=semicondensed"
+ 
+[ -e $CACHEDIR/font ] || {\
+	echo $DEFAULT_FONT > $CACHEDIR/font
+	echo "#define XRES_font \"$DEFAULT_FONT\"" >> "$INCLUDEFILE"
+}
+
+ln -f .xinitrc $HOME/.xinitrc
