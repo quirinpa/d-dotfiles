@@ -7,19 +7,30 @@ ln -sf $PWD/.vim/ftplugin $PWD/.vim/colors ~/.vim
 [ -e $HOME/.vim/autoload/pathogen.vim ] ||
 	curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
-iplug(){ 
-	name=`basename $1`
-	target=$HOME/.vim/bundle/$name
+bundle=$HOME/.vim/bundle
+not=
+while read -r line; do
+	name=$(basename $line)
+	target=$bundle/$name
+	not=$not"-not -path '/**/$name' -a "
 	if [[ -e $target ]]; then
 		git -C $target pull
 	else
-		git -C ~/.vim/bundle clone git://github.com/$1 
+		git -C $bundle clone git://github.com/$line
 	fi
-}
+done << EOF
+tpope/vim-unimpaired
+tpope/vim-surround
+tpope/vim-fugitive
+tpope/vim-commentary
+tpope/vim-vinegar
+tpope/vim-dispatch
+EOF
 
-iplug 'tpope/vim-unimpaired'
-iplug 'tpope/vim-surround'
-iplug 'tpope/vim-fugitive'
-iplug 'tpope/vim-commentary'
-iplug 'tpope/vim-vinegar'
-iplug 'tpope/vim-dispatch'
+echo -n "proceeding will delete all other bundles (y/*) "
+read -r y
+[ "$y" == "y" ] && eval find $bundle -mindepth 1 -maxdepth 1 -type d \
+	$(echo "$not"|head -c -4) | while read -r path; do
+		echo rm -rf $path
+		rm -rf $path
+	done
