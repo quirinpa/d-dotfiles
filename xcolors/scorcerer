@@ -12,11 +12,11 @@
 
 ! █▓▒░ scorcerer colors
 *.foreground:   #c2c2b0
-*.background:   #222222
+*.background:   #111111
 *.cursorColor:  #c2c2b0
 ! black
 *.color0:       #222222
-*.color8:       #272822
+*.color8:       #444444
 ! red
 *.color1:       #aa4450
 *.color9:       #ff6a6a
