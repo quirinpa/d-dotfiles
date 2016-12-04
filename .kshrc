@@ -20,9 +20,9 @@ maybeerr() {
 }
 
 shortpwd() {
-	[[ ${PWD#$HOME} == $PWD ]] && echo $PWD || echo ~${PWD#$HOME} 
+	[[ ${PWD#$HOME} == $PWD ]] && echo $PWD || echo \~${PWD#$HOME} 
 }
 
 echo -ne $USER@$(hostname)\ 
-PS1="$bold\$(maybeerr)`bright 7`\$(shortpwd) `bright 4`\$\033[0m "
+PS1="$bold\$(maybeerr)`bright 7`\$(shortpwd) `bright 4`$`echo -e "\033[0m "`"
 alias ls="ls -F"
