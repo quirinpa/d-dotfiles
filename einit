@@ -1,0 +1,4 @@
+#!/bin/ksh
+RUNP=$PWD
+cd $HOME
+ln -s $RUNP/bin

@@ -1,0 +1,59 @@
+#!/bin/ksh
+server=irc.freenode.net
+
+set -e
+
+waitfor() {
+	while [ ! ${2:--f} $1 ]; do
+		sleep 1
+	done
+}
+
+IRCDIR="/tmp/irc$(rpass 8)"
+ii -e ssl -s $server -i $IRCDIR &
+
+mkdir $IRCDIR -p | true
+waitfor $IRCDIR/$server -d
+cd $IRCDIR/$server
+
+waitfor out
+tail out -f &
+ppids="$!"
+
+echo /nickserv identify $(whoami) $(pass irc) > in
+waitfor nickserv/out
+tail nickserv/out -f &
+ppids="$ppids $!"
+
+doloop=true
+chpid=
+channel=.
+trap "doloop=" INT
+while $doloop && read -r first rest; do
+	# echo $first $rest > in
+	case $first in
+		/j*)
+			[ ! -z $chpid ] && kill $chpid
+			channel=$rest
+			echo "/j $channel" > in
+			waitfor $channel/out
+			tail $channel/out -f &
+			chpid=$!
+			echo JOIN $channel
+			;;
+		/quit) doloop=false;;
+		*) echo "$first $rest" > $channel/in;;
+	esac
+done
+
+echo /quit > in || true
+
+[ ! -z $chpid ] && kill $chpid || true
+
+for pid in $ppids; do
+	kill $pid || true
+done
+
+rm -rf $IRCDIR
+cd -
+wait

@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+alias sesc="printf \"%q\""
+# sesc() {
+# 	printf "%q" "$1"
+# }
+f="$1"
+# ass=`sesc "$(echo $1 | sed "s/\..*$/\.ass/")"`
+ass=`echo $1 | sed "s/\..*$/\.ass/"`
+echo ASS \"$ass\"
+sleep 1
+if [ ! -e "$ass" ]; then
+	echo $ ffmpeg -i "$1" -map 0:s:0 "$ass"
+	ffmpeg -i "$1" -map 0:s:0 "$ass"
+fi
+echo VASS \"$(sesc "$ass")\"
+ffplay "$1" -vf ass="$(sesc "$ass")"

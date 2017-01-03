@@ -1,0 +1,5 @@
+#!/bin/ksh
+set -e
+url=`asksite`
+[ -z $url ] && exit 1
+sr $url

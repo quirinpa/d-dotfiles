@@ -1,0 +1,2 @@
+#!/bin/sh
+mutt 698adwu822eja@hpeprint.com -a $1 </dev/null

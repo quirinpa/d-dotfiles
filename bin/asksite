@@ -1,0 +1,4 @@
+#!/bin/ksh
+set -e
+sr_args="`echo "$(sr -elvi && cat $HOME/.config/surfraw/bookmarks)" | awk '{print $1}' | dmenu -p sr`"
+BROWSER="echo" sr $sr_args
