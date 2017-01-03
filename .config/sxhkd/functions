@@ -1,0 +1,2 @@
+#!ksh
+{ sr -elvi; cat $HOME/.config/surfraw/bookmarks } | awk {print $1}|dmenu -p sr|xargs sr -browser=surf
