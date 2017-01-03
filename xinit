@@ -1,76 +1,84 @@
 #!/bin/ksh
 set -e
 
-CACHE=$HOME/.cache/xcolors
-mkdir -p $CACHE
+ln -f .xinitrc $HOME/.xinitrc
 
+CACHE=$HOME/.cache/xcolors
 INCLUDE=$HOME/include/xres.h
+SCHEME=$CACHE/.sha
+
+mkdir -p $CACHE
 
 xscheme=${1-xcolors/kirino}
 xschemesum=$(sha1sum $xscheme | awk '{print $1}')
-export SCHEME=$CACHE/.sha
+[ -e $SCHEME ] && [ "`cat $SCHEME`" == "$xschemesum" ] &&
+	scheme_changed=false || scheme_changed=true
 
-[ -e $SCHEME ] && [ "`cat $SCHEME`" == "$xschemesum" ] && exit 2
-echo $xschemesum > /tmp/xcolorsha
+echo -n SCHEME $xscheme\ 
+$scheme_changed && echo NEW && {
+	rm -f $CACHE/* $XRES_H $HOME/.Xresources $INCLUDE
 
-rm -f $CACHE/* $XRES_H $HOME/.Xresources $INCLUDE
+	echo -en "#!/bin/ksh\ncat $CACHE/\$1" > $HOME/bin/xget
+	chmod +x $HOME/bin/xget
 
-echo -en "#!/bin/ksh\ncat $CACHE/\$1" > $HOME/bin/xget
-chmod +x $HOME/bin/xget
+	cat .Xresources $xscheme | while read line; do
+		echo $line >> $HOME/.Xresources
 
-cat .Xresources $xscheme | while read line; do
-	echo $line >> $HOME/.Xresources
+		if [[ $line == \** ]]; then
+			echo $line | cut -c 2- | tr -d '\ \t\.' | {
+				IFS=\: read key val
+				echo $val > "$CACHE/$key"
+				echo "#define XRES_$key \"$val\"" >> $INCLUDE
+			}
+		fi
 
-	if [[ $line == \** ]]; then
-		echo $line | cut -c 2- | tr -d '\ \t\.' | {
-			IFS=\: read key val
-			echo $val > "$CACHE/$key"
-			echo "#define XRES_$key \"$val\"" >> $INCLUDE
-		}
-	fi
+	done
 
-done
+	[ -e $CACHE/font ] || {\
+		DEFAULT_FONT="Fixed: pixelsize=13: style=semicondensed"
+		echo $DEFAULT_FONT > $CACHE/font
+		echo "#define XRES_font \"$DEFAULT_FONT\"" >> $INCLUDE
+	}
+} || echo SAME && echo $xschemesum > $SCHEME
 
-[ -e $CACHE/font ] || {\
-	DEFAULT_FONT="Fixed: pixelsize=13: style=semicondensed"
-	echo $DEFAULT_FONT > $CACHE/font
-	echo "#define XRES_font \"$DEFAULT_FONT\"" >> $INCLUDE
+SOURCEDIR=${SOURCEDIR:-$HOME/sc}
+
+lsnames() {
+	ls -l $1 | tail -n +2 | awk '{print $9}'
 }
-
-ln -f .xinitrc $HOME/.xinitrc
-
-SOURCEDIR=$HOME/sc
 
 clinstall() {
 	name=$(basename $1)
 	dir=$2/$name
+	sdir=$SOURCEDIR/$dir
+	pdir=patches/$dir
+	m(){
+		make -C $sdir --no-print-directory $@
+	}
+	g(){
+		git -C $sdir $@
+	}
 
-	test -e $dir && \
-		git -C $dir pull || \
-		git clone $1 $dir
+	if [[ -e $sdir ]]; then
+		echo DIRTY $sdir
+	else
+		echo CLEAN
+		git clone $1 $sdir
+		g am --signoff < $pdir
+	fi
 
-	git -C $dir reset --soft $3
-
-	ls -l patches/$name | awk '{print $9}' | tail -n +2 | \
-		while read -r patchfile; do
-			patch -s -N $dir/$patchfile patches/$name/$patchfile
-		done || true
-
-	make -C $dir -q || {
-		make -C $dir
-		sudo make -C $dir install
+	$scheme_changed && m clean 
+	m -q || {
+		m
+		sudo make -C $sdir --no-print-directory install
 	}
 }
 
-mkdir -p $SOURCEDIR/suckless || true
-si() {
-	clinstall http://git.suckless.org/$1 $SOURCEDIR/suckless $2
-}
+cat patches/.sources | while read url subdir; do
+	echo SOURCE $url $subdir
+	mkdir -p $SOURCEDIR/$subdir || true
+	 lsnames patches/$subdir | while read -r app; do
+		clinstall "$url/$app" $subdir
+	done
+done
 
-si tabbed bc236142fa72d2f9d6b5c790d3f3a9a9168a7164
-si dmenu e90b88e12a88d6214c00d5ee58ceb69446aa5ac4
-si slock 2d2a21a90ad1b53594b1b90b97486189ec54afce
-si st e44832408bb3147826c346872b49de105a4d0e0b
-si surf 6c8da4c851b85c6167f3104158089d9a4fe11ca7
-
-mv /tmp/xcolorsha $SCHEME

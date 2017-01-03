@@ -1,0 +1,60 @@
+From 6008df38f913e6b0bfa4e37318e7fd7c92902bc6 Mon Sep 17 00:00:00 2001
+From: Paulo Quirino <quirinpa@gmail.com>
+Date: Wed, 28 Dec 2016 21:18:07 +0000
+Subject: [PATCH] xres
+
+---
+ Makefile     | 4 ++--
+ config.def.h | 9 +++++----
+ 2 files changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index a7cd04f..9cae4d5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -6,7 +6,7 @@ include config.mk
+ SRC = drw.c dmenu.c stest.c util.c
+ OBJ = ${SRC:.c=.o}
+ 
+-all: options dmenu stest
++all: dmenu stest
+ 
+ options:
+ 	@echo dmenu build options:
+@@ -18,7 +18,7 @@ options:
+ 	@echo CC $<
+ 	@${CC} -c ${CFLAGS} $<
+ 
+-config.h:
++config.h: config.def.h /tmp/xcolorsha
+ 	@echo creating $@ from config.def.h
+ 	@cp config.def.h $@
+ 
+diff --git a/config.def.h b/config.def.h
+index 1edb647..5b28426 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -3,15 +3,16 @@
+ 
+ static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom     */
+ /* -fn option overrides fonts[0]; default X11 font or font set */
++#include "xres.h"
+ static const char *fonts[] = {
+-	"monospace:size=10"
++	XRES_font
+ };
+ static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
+ static const char *colors[SchemeLast][2] = {
+ 	/*     fg         bg       */
+-	[SchemeNorm] = { "#bbbbbb", "#222222" },
+-	[SchemeSel] = { "#eeeeee", "#005577" },
+-	[SchemeOut] = { "#000000", "#00ffff" },
++	[SchemeNorm] = { XRES_foreground , XRES_background },
++	[SchemeSel] = { XRES_background, XRES_color11 },
++	[SchemeOut] = { XRES_color2, XRES_color8 },
+ };
+ /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
+ static unsigned int lines      = 0;
+-- 
+2.11.0
+

@@ -1,0 +1,2 @@
+#!/bin/ksh
+cat /home/quirinpa/.cache/xcolors/$1

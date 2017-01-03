@@ -1,6 +1,40 @@
---- config.def.h	2016-12-03 17:32:42.590647830 +0000
-+++ config.h	2016-12-03 18:11:52.384584570 +0000
-@@ -19,7 +19,7 @@
+From 2f48257a880873d87b0548422ceb97896550ec31 Mon Sep 17 00:00:00 2001
+From: Paulo Quirino <quirinpa@gmail.com>
+Date: Wed, 28 Dec 2016 21:31:27 +0000
+Subject: [PATCH] lotsastuff
+
+---
+ Makefile     |  4 ++--
+ config.def.h | 39 ++++++++++++++++++---------------------
+ 2 files changed, 20 insertions(+), 23 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index a9d4d1d..2e8f3b7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -6,7 +6,7 @@ include config.mk
+ SRC = surf.c
+ OBJ = ${SRC:.c=.o}
+ 
+-all: options surf
++all: surf
+ 
+ options:
+ 	@echo surf build options:
+@@ -20,7 +20,7 @@ options:
+ 
+ ${OBJ}: config.h config.mk
+ 
+-config.h:
++config.h: config.def.h /tmp/xcolorsha
+ 	@echo creating $@ from config.def.h
+ 	@cp config.def.h $@
+ 
+diff --git a/config.def.h b/config.def.h
+index 7c2b10f..b76b31d 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -19,7 +19,7 @@ static char *cookiefile     = "~/.surf/cookies.txt";
  static char *cookiepolicies = "Aa@"; /* A: accept all; a: accept nothing,
                                        * @: accept all except third party */
  static char *cafile         = "/etc/ssl/certs/ca-certificates.crt";
@@ -9,7 +43,7 @@
  static time_t sessiontime   = 3600;
  
  /* Webkit default features */
-@@ -33,7 +33,7 @@
+@@ -33,7 +33,7 @@ static Bool enableinspector       = TRUE;
  static Bool enablestyle           = TRUE;
  static Bool loadimages            = TRUE;
  static Bool hidebackground        = FALSE;
@@ -18,7 +52,7 @@
  
  #define SETPROP(p, q) { \
  	.v = (char *[]){ "/bin/sh", "-c", \
-@@ -47,13 +47,7 @@
+@@ -47,13 +47,7 @@ static Bool allowgeolocation      = TRUE;
  
  /* DOWNLOAD(URI, referer) */
  #define DOWNLOAD(d, r) { \
@@ -33,7 +67,7 @@
  
  /* PLUMB(URI) */
  /* This called when some URI which does not begin with "about:",
-@@ -84,6 +78,13 @@
+@@ -84,6 +78,13 @@ static SiteStyle styles[] = {
   */
  static Key keys[] = {
  	/* modifier             keyval      function    arg             Focus */
@@ -42,12 +76,12 @@
 +	{ MODKEY, GDK_m, spawn, { .v = (char *[]){ "/bin/sh", "-c", "echo `echo|dmenu -p 'Bookmark Name'` `xprop -id $0 _SURF_URI | cut -d '\"' -f2` >> ~/.config/surfraw/bookmarks", winid, NULL }}},
 +
 +	/* search using sr - replace page */
-+	{ MODKEY, GDK_space, spawn, { .v = (char *[]){ "/bin/sh", "-c", "xprop -id $0 -f _SURF_GO 8s -set _SURF_GO $(BROWSER=echo sr $(sr -elvi | awk '{print $1}'| dmenu -p rsr))", winid, NULL }}},
++	{ MODKEY, GDK_space, spawn, { .v = (char *[]){ "/bin/sh", "-c", "xprop -id $0 -f _SURF_GO 8s -set _SURF_GO $(asksite)", winid, NULL }}},
 +
  	{ MODKEY|GDK_SHIFT_MASK,GDK_r,      reload,     { .b = TRUE } },
  	{ MODKEY,               GDK_r,      reload,     { .b = FALSE } },
  	{ MODKEY|GDK_SHIFT_MASK,GDK_p,      print,      { 0 } },
-@@ -91,29 +92,25 @@
+@@ -91,29 +92,25 @@ static Key keys[] = {
  	{ MODKEY,               GDK_p,      clipboard,  { .b = TRUE } },
  	{ MODKEY,               GDK_y,      clipboard,  { .b = FALSE } },
  
@@ -85,3 +119,6 @@
  	{ MODKEY,               GDK_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND") },
  
  	{ MODKEY,               GDK_n,      find,       { .b = TRUE } },
+-- 
+2.11.0
+

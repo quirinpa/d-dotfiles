@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+cat $HOME/.sec/key | gpg | sudo cryptsetup --key-file - luksOpen /dev/mapper/vg0-safe safe
+sudo mount /dev/mapper/safe /mnt/safe
+echo MOUNT
+bitcoind -datadir=/mnt/safe/bitcoin
+sudo umount /mnt/safe
+cat $HOME/.sec/key | gpg | sudo cryptsetup --key-file - luksClose safe
+echo UMOUNT
