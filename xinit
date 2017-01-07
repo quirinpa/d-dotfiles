@@ -1,13 +1,11 @@
 #!/bin/ksh
 set -e
 
-ln -f .xinitrc $HOME/.xinitrc
-
 CACHE=$HOME/.cache/xcolors
 INCLUDE=$HOME/include/xres.h
 SCHEME=$CACHE/.sha
 
-mkdir -p $CACHE
+mkdir -p $CACHE || true
 
 xscheme=${1-xcolors/kirino}
 xschemesum=$(sha1sum $xscheme | awk '{print $1}')
@@ -35,11 +33,13 @@ $scheme_changed && echo NEW && {
 	done
 
 	[ -e $CACHE/font ] || {\
+		# DEFAULT_FONT="VGA: pixelsize=19"
 		DEFAULT_FONT="Fixed: pixelsize=13: style=semicondensed"
 		echo $DEFAULT_FONT > $CACHE/font
 		echo "#define XRES_font \"$DEFAULT_FONT\"" >> $INCLUDE
 	}
 } || echo SAME && echo $xschemesum > $SCHEME
+echo $xschemesum > /tmp/xcolorsha
 
 SOURCEDIR=${SOURCEDIR:-$HOME/sc}
 

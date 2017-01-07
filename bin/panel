@@ -1,0 +1,85 @@
+#!/bin/ksh -e
+trap "bspc config top_padding 0; setsid kill -- -$$" EXIT
+
+height=19
+bspc config top_padding $height
+
+c_bg=`xget background`
+
+in_dir=/tmp/barin
+mkdir $in_dir 2>/dev/null || true
+inotifywait -r $in_dir -m -e CLOSE_WRITE,DELETE | \
+	while read -r ufile ; do
+		str=$(cat $in_dir/* | tr "\n" " ")
+		echo "${str%?}"
+	done | lemonbar -a 32 -g x$height \
+		-f "`xget font || echo`" \
+		-F "`xget foreground`" -B "$c_bg" &
+
+c_empty=`xget color5`
+c_busy=`xget color13`
+c_urgent=`xget color9`
+c_unknown=`xget color8`
+
+color_check() {
+	[[ "$1" == "$color" ]] || {
+		color=$1
+		echo -n "%{F$1}"
+	};
+}
+
+bspc subscribe report | \
+	while read -r line; do
+		IFS=":"
+		for item in $line; do
+			name=${item#?}
+			case $item in
+				[fFoOuU]*)
+					case $item in
+						[fF]*) c=$c_empty; icon=" " ;;
+						[oO]*) c=$c_busy; icon=\.;;
+						[uU]*) c=$c_urgent; icon=\!;;
+					esac
+					if [[ $item == [FOU]* ]]; then
+						echo -n "%{B$c}%{F$c_bg}$icon%{B-}"
+						color="$c_bg"
+					else
+						color_check $c
+						IFS="" printf "$icon"
+					fi;;
+				[LTG]*) 
+					color_check $c_unknown
+					printf "$name"
+			esac
+		done | IFS= xargs -0 notify-send -t 0 -f 000
+	done &
+
+xtitle -s -f '%s' -t 20 | \
+	while read -r title; do
+		notify-send -f 001 -t 0 "%{c}%{F-}$title%{r}" &
+	done &
+
+c_good=`xget color10`
+c_normal=`xget color12`
+c_bad=`xget color1`
+
+icond() { echo "%{F$c_normal}$1%{F-}"; }
+while true; do
+	{
+		icond D; date +"%d/%m %H:%M"
+		icond V; amixer sget Master | grep -Po "\d+%"
+		bat=/sys/class/power_supply/BAT0
+		if [[ -e $bat ]]; then
+			capacity=`cat $bat/capacity`
+			status=`cat $bat/status`
+			[[ $status == Charging ]] && c=$c_good || \
+				[[ $capacity -lt 15 ]] && c=$c_bad
+			c=${c:-$c_normal}
+			echo "%{F$c}P%{F-} $capacity%"
+		fi
+	} | xargs notify-send -f zzz -t 0
+	sleep 60
+done &
+
+notify-send init
+wait

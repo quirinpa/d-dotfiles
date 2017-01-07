@@ -1,0 +1,7 @@
+#!/bin/ksh
+oldstatus=`synclient | awk '/Touch/ {print $3}'`
+status=$(( 1 - $oldstatus))
+[[ $status == 0 ]] &&
+	notify-send -f zza -i To -t 0 -u 0 ||
+	notify-send -f zza -i To -t 0 -u 2
+synclient TouchpadOff=$status

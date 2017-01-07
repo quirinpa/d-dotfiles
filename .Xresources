@@ -1,4 +1,4 @@
 *scrollBar: false
 *saveLines: 0
-!*.font: -*-fixed-medium-r-*-*-14-*-*-*-*-*-*-*
-!*.boldFont: -*-fixed-bold-r-*-*-14-*-*-*-*-*-*-*
+*.font: VGA:pixelsize=19
+*.boldFont: VGA:pixelsize=19

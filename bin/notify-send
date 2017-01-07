@@ -1,0 +1,38 @@
+#!/bin/ksh
+set -e
+
+message=
+while [[ $# -gt 0 ]]; do
+	case $1 in
+		-i|--icon)
+			icon=$2; shift; shift;;
+		-u|--urgency)
+			urgency=$2; shift; shift;;
+		-t|--expire-time)
+			expires=$2; shift; shift;;
+		-f|--file)
+			file=$2; shift; shift;;
+		*) message="$message$1 "; shift;;
+	esac
+done
+
+nd=/tmp/barin
+mkdir $nd -p || true
+[[ -z "$file" ]] && nd=$nd/$(rpass 8) || nd=$nd/$file
+
+if [[ ! -z "$icon" ]]; then
+	urgency=${urgency:-1}
+	case $urgency in
+		0) i_c=`xget color10`;;
+		1) i_c=`xget color12`;;
+		2) i_c=`xget color1`;;
+	esac
+	str="%{F$i_c}$icon%{F-}"
+	[[ -z $message ]] || str="$str "
+fi
+
+str="$str${message%?}"
+[[ -f $nd ]] && [[ "$str" == "`cat $nd`" ]] || echo "$str" > $nd
+
+expires=${expires:-5}
+[[ "$expires" == "0" ]] || { sleep $expires; rm $nd; } &

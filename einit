@@ -1,4 +1,11 @@
 #!/bin/ksh
-RUNP=$PWD
+RDIR=$PWD
 cd $HOME
-ln -s $RUNP/bin
+ln -sf $RDIR/bin
+ln -f $RDIR/.xinitrc
+CONFIG=$RDIR/.config
+mkdir .config
+cd .config
+ln -sf $CONFIG/bspwm
+ln -sf $CONFIG/sxhkd
+# cd -
