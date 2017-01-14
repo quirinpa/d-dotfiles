@@ -28,9 +28,6 @@ super + {_,shift + }w
 	bspc node -{c,k}
 
 # alternate between the tiled and monocle layout
-super + {t,shift + t,m,f}
-	toggle_fullscreen {tiled,pseudo_tiled,floating, }
-# set the window state
 super + {t,shift + t,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
@@ -49,6 +46,9 @@ super + g
 # state/flags
 #
 
+# set the window state
+super + {t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
 super + ctrl + {x,y,z}
