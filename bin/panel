@@ -56,8 +56,10 @@ bspc subscribe report | \
 
 xtitle -s -f '%s' -t 20 | \
 	while read -r title; do
-		notify-send -f 001 -t 0 "%{c}%{F-}$title%{r}" &
+		notify-send -f 001 -t 0 "%{c}%{F-}$title"
 	done &
+
+notify-send -f 002 -t 0 "%{r}"
 
 c_good=`xget color10`
 c_normal=`xget color12`
