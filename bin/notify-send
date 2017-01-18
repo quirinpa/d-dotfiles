@@ -17,8 +17,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 nd=/tmp/barin
-mkdir $nd -p || true
-[[ -z "$file" ]] && nd=$nd/$(rpass 8) || nd=$nd/$file
+[ -d $nd ] || mkdir $nd
+[[ -z "$file" ]] && nd=$nd/$(openssl rand -hex 8) || nd=$nd/$file
 
 if [[ ! -z "$icon" ]]; then
 	urgency=${urgency:-1}
