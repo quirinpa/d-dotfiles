@@ -1,32 +1,27 @@
 .PHONY: all install clean
 SCHEME ?= colors/kirino
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 
 all: xres.h .Xresources
 
-xres.h: cache
-	@[ ! -f $@ ] || rm $@
-	@ls cache | while read filename; do \
-		echo "#define XRES_$$filename \"`cat cache/$$filename`\"" >> $@; \
-		done
+.Xresources:
+	@cat default $(SCHEME) > $@
 
-.Xresources: cache
-	@[ ! -f $@ ] || rm $@
-	@ls cache | while read filename; do \
-		echo "*.$$filename: `cat cache/$$filename`" >> $@; \
-		done
-
-cache: ${SCHEME} default
-	@[ -d cache ] || mkdir cache
-	@cat $(SCHEME) default | while read line; do \
-		[[ $$line == \** ]] && \
-		echo $$line | cut -c 2- | tr -d '\ \t\.' | \
-		{ IFS=\: read key val; echo "$$val" > cache/$$key; } \
-		done
+xres.h: .Xresources
+	@xrdb -load .Xresources -n | while read line; \
+		do \
+			if [[ $$line == \** ]]; then \
+				echo $$line | cut -c 2- | tr -d '\ \t\.' | { \
+					IFS=\: read key val ; \
+					echo "#define XRES_$$key \"$$val\"" ; \
+				}; \
+			fi; \
+		done > $@
 
 install:
 	cp xres.h ${PREFIX}/include
-	@echo copy .Xresources to user home, or link this one!
+	# Copy .Xresources to user home, or\
+		"cd ~; ln -s $(CURDIR)/.Xresources" as the intended user.
 
 clean:
-	rm -r cache .Xresources xres.h
+	rm -r .Xresources xres.h

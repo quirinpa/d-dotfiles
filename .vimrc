@@ -1,20 +1,10 @@
-set nocompatible shiftwidth=2 tabstop=2 smarttab
-set hidden cursorline wildmenu wildignore+=*.o title
-set lazyredraw t_ti= t_te= path+=**
-set list lcs=tab:\|\ 
+set nocompatible shiftwidth=2 tabstop=2 smarttab hidden cursorline wildmenu 
+set wildignore+=*.o title path+=** list lcs="tab:|" tags=./tags
 
 execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
-if &term =~ "vt220" || &term =~ "linux"
-	set t_Co=8
-	set t_Sf=[3%dm
-	set t_Sb=[4%dm
-	colorscheme qnoctu8
-else
-	colorscheme qnoctu
-endif
+colorscheme qnoctu8
 
-set tags=./tags
 nnoremap <leader>m :Make<cr>

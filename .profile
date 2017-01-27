@@ -2,9 +2,8 @@
 #
 # sh/ksh initialization
 
-PATH=$HOME/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin:/usr/games:.
-export HOME TERM
-export ENV=$HOME/.kshrc
-export PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/6.0/packages/i386/
-export BROWSER=lynx
-export EDITOR=vim
+PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/6.0/packages/i386/
+PATH=$PATH:/usr/games
+ENV=$HOME/.kshrc
+BROWSER=lynx
+EDITOR=vim

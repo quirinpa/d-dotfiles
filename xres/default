@@ -1,4 +1,9 @@
 *scrollBar: false
 *saveLines: 0
-*.font: VGA:pixelsize=19
-*.boldFont: VGA:pixelsize=19
+#define DefaultFont "Fixed:pixelsize=13:style=semicondensed"
+*font: DefaultFont
+
+xterm*termName: xterm-vt220
+xterm*boldMode: false
+xterm*colorBDMode: true
+xterm*boldFont: DefaultFont

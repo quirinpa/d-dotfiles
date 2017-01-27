@@ -4,7 +4,7 @@
 
 # terminal emulator
 super + Return
-	st
+	xterm -ls
 
 super + {shift + colon}
 	dmenu_run
@@ -26,6 +26,9 @@ super + Escape
 # close and kill
 super + {_,shift + }w
 	bspc node -{c,k}
+
+super + m
+	bspc desktop -l next
 
 # alternate between the tiled and monocle layout
 super + {t,shift + t,s,f}

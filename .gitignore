@@ -1,3 +1,3 @@
-xcolors/cache/*
-xcolors/.Xresources
-xcolors/xres.h
+xres/.Xresources
+xres/xres.h
+**/.*.sw?

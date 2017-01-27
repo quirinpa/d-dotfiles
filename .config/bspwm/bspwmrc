@@ -1,5 +1,6 @@
-#!/bin/ksh
-set -e
+#!/bin/ksh -e
+
+trap "kill 0" INT
 
 if [ $(hostname) == qbit ]; then
 	bspc monitor HDMI-0 -d 0 1 2 3 4 5 6 7 8
@@ -24,3 +25,8 @@ bspc rule -a Chromium desktop='^2'
 bspc rule -a mplayer2 state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
+
+panel &
+sxhkd &
+
+wait

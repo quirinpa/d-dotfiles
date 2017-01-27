@@ -1,59 +1,56 @@
-#!/bin/ksh
+#!/bin/ksh -e
 server=irc.freenode.net
 
-set -e
-
 waitfor() {
+	echo -n WAIT FOR $1...
 	while [ ! ${2:--f} $1 ]; do
 		sleep 1
 	done
+	echo OK
 }
 
-IRCDIR="/tmp/irc$(rpass 8)"
+IRCDIR="/tmp/irc$(openssl rand -hex 8)"
 ii -e ssl -s $server -i $IRCDIR &
 
-mkdir $IRCDIR -p | true
+[ -d $IRCDIR ] || mkdir -p $IRCDIR
 waitfor $IRCDIR/$server -d
 cd $IRCDIR/$server
 
 waitfor out
-tail out -f &
-ppids="$!"
+tail -f out &
 
 echo /nickserv identify $(whoami) $(pass irc) > in
 waitfor nickserv/out
-tail nickserv/out -f &
-ppids="$ppids $!"
+tail -f nickserv/out &
 
 doloop=true
 chpid=
 channel=.
-trap "doloop=" INT
-while $doloop && read -r first rest; do
-	# echo $first $rest > in
+
+end() {
+	kill 0
+	rm -rf $IRCDIR
+	cd -
+}
+
+trap end INT
+
+cat | while read -r first rest
+do
 	case $first in
 		/j*)
-			[ ! -z $chpid ] && kill $chpid
 			channel=$rest
-			echo "/j $channel" > in
-			waitfor $channel/out
-			tail $channel/out -f &
-			chpid=$!
-			echo JOIN $channel
+			echo /j $channel > in
+			if [[ $channel == \#* ]]; then
+				waitfor "$channel/out"
+				[ -z $chpid ] || kill $chpid
+				tail -f "$channel/out" &
+				chpid=$!
+			fi
 			;;
-		/quit) doloop=false;;
 		*) echo "$first $rest" > $channel/in;;
 	esac
 done
 
-echo /quit > in || true
-
-[ ! -z $chpid ] && kill $chpid || true
-
-for pid in $ppids; do
-	kill $pid || true
-done
-
-rm -rf $IRCDIR
-cd -
+end
 wait

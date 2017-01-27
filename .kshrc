@@ -1,16 +1,13 @@
-export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
+export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+gpg-connect-agent updatestartuptty /bye >/dev/null
 
 set -o emacs
 if [[ $TERM == vt220 ]] || [[ $TERM == linux ]]; then
 	bold="\033[1m"
-	bright() {
-		echo -e "\033[3$1m"
-	}
+	bright() { echo -e "\033[3$1m"; }
 else
 	bold=""
-	bright() {
-		echo -e "\033[9$1m"
-	}
+	bright() { echo -e "\033[9$1m"; }
 fi
 
 maybeerr() {
@@ -23,6 +20,6 @@ shortpwd() {
 	[[ ${PWD#$HOME} == $PWD ]] && echo $PWD || echo \~${PWD#$HOME} 
 }
 
-echo -ne $USER@$(hostname)\ 
+echo -ne $(whoami)@$(hostname)\ 
 PS1="$bold\$(maybeerr)`bright 7`\$(shortpwd) `bright 4`$ `echo -e "\033[0m"`"
 alias ls="ls -F"

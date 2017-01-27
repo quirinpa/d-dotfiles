@@ -1,7 +1,7 @@
 #!/bin/ksh -e
 trap 'bspc config top_padding 0; kill -TERM -- -$$' EXIT
 
-height=19
+height=15
 bspc config top_padding $height
 
 c_bg=`xget background`
@@ -11,16 +11,13 @@ in_dir=/tmp/barin
 inotifywait -r $in_dir -m -e MODIFY,DELETE,CREATE | \
 	while read -r ufile ; do
 		str=$(cat $in_dir/* | tr "\n" " ")
-		# echo $ufile >&2
 		echo "${str%?}"
 	done | lemonbar -a 32 -g x$height \
-		-F "`xget foreground`" -B "$c_bg" &
-		# -f "`xget font || echo`" \
+		-F "`xget color8`" -B "$c_bg" &
 
 c_empty=`xget color5`
 c_busy=`xget color13`
 c_urgent=`xget color9`
-c_unknown=`xget color8`
 
 color_check() {
 	[[ "$1" == "$color" ]] || {
@@ -50,7 +47,7 @@ bspc subscribe report | \
 							printf "$icon"
 						fi;;
 					[LTG]*) 
-						color_check $c_unknown
+						color_check -
 						printf "$name"
 				esac
 			done
@@ -59,7 +56,7 @@ bspc subscribe report | \
 
 xtitle -s -f '%s\n' -t 20 | \
 	while read -r title; do
-		notify-send -f 001 -t 0 "%{c}%{F-}$title"
+		notify-send -f 001 -t 0 "%{c}%{F$c_busy}$title%{F-}"
 	done &
 
 notify-send -f 002 -t 0 "%{r}"
@@ -83,11 +80,9 @@ if [[ ! -z "`$BAT0`" ]]; then
 	SHOWBAT=showbat
 fi
 
-icond() { echo "%{F$c_normal}$1%{F-}"; }
 while true; do
 	{
-		icond D; date +"%d/%m %H:%M"
-		# icond V; amixer sget Master | grep -Po "\d+%"
+		date +"%%{F$c_normal}D%%{F-} %d/%m %H:%M"
 		$SHOWBAT
 	} | xargs notify-send -f zzz -t 0
 	sleep 60
