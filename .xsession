@@ -9,4 +9,6 @@ feh --bg-fill lain.jpg
 toggle_touchpad
 exec bspwm
 
+gpg-connect-agent /bye
+
 # redshift -t 5700:3500 &

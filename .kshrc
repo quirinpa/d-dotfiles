@@ -1,6 +1,3 @@
-export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
-gpg-connect-agent updatestartuptty /bye >/dev/null
-
 set -o emacs
 if [[ $TERM == vt220 ]] || [[ $TERM == linux ]]; then
 	bold="\033[1m"

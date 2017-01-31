@@ -1,13 +1,25 @@
 .PHONY: all install clean
-SCHEME ?= colors/kirino
+
 PREFIX ?= /usr
+
+.ifdef SCHEME
+.PHONY: selected
+.endif
+
+SCHEME ?= colors/kirino
 
 all: xres.h .Xresources
 
-.Xresources:
-	@cat default $(SCHEME) > $@
+selected:
+	# selected $(SCHEME)
+	@ln -sf $(SCHEME) selected
+
+.Xresources: default selected
+	# made .Xresources
+	@cat $> > $@
 
 xres.h: .Xresources
+	# made xres.h
 	@xrdb -load .Xresources -n | while read line; \
 		do \
 			if [[ $$line == \** ]]; then \
@@ -24,4 +36,4 @@ install:
 		"cd ~; ln -s $(CURDIR)/.Xresources" as the intended user.
 
 clean:
-	rm -r .Xresources xres.h
+	rm -r .Xresources xres.h selected

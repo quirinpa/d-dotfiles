@@ -1,5 +1,5 @@
-set nocompatible shiftwidth=2 tabstop=2 smarttab hidden cursorline wildmenu 
-set wildignore+=*.o title path+=** list lcs="tab:|" tags=./tags
+set nocompatible shiftwidth=2 tabstop=2 smarttab hidden cursorline wildmenu
+set wildignore+=*.o title path+=** list tags=./tags
 
 execute pathogen#infect()
 syntax on

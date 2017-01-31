@@ -1,2 +1,2 @@
 #!/bin/ksh
-cat /home/quirinpa/.cache/xcolors/$1
+xrdb -query | grep $1: | awk '{print $2}'
