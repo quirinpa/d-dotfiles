@@ -1,5 +1,5 @@
 #!/bin/ksh
-set -e
+
 
 ln -fs $PWD/.vimrc $PWD/.profile $PWD/.kshrc ~
 mkdir -p ~/.vim/autoload ~/.vim/bundle || true
@@ -25,6 +25,9 @@ tpope/vim-fugitive
 tpope/vim-commentary
 tpope/vim-vinegar
 tpope/vim-dispatch
+fboender/bexec
+vim-scripts/pydoc.vim
+vim-scripts/identpython.vim
 EOF
 
 echo -n "proceeding will delete all other bundles (y/*) "

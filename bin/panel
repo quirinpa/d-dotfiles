@@ -1,62 +1,62 @@
-#!/bin/ksh -e
-trap "bspc config top_padding 0; setsid kill -- -$$" EXIT
+#!/bin/ksh -ev
+trap 'bspc config top_padding 0; kill -TERM -- -$$' EXIT
 
-height=19
+height=15
 bspc config top_padding $height
 
 c_bg=`xget background`
 
 in_dir=/tmp/barin
-mkdir $in_dir 2>/dev/null || true
-inotifywait -r $in_dir -m -e CLOSE_WRITE,DELETE | \
+[ -d $in_dir ] || mkdir $in_dir
+inotifywait -r $in_dir -m -e MODIFY,DELETE,CREATE | \
 	while read -r ufile ; do
 		str=$(cat $in_dir/* | tr "\n" " ")
 		echo "${str%?}"
 	done | lemonbar -a 32 -g x$height \
-		-f "`xget font || echo`" \
-		-F "`xget foreground`" -B "$c_bg" &
+		-F "`xget color8`" -B "$c_bg" &
 
 c_empty=`xget color5`
 c_busy=`xget color13`
 c_urgent=`xget color9`
-c_unknown=`xget color8`
 
 color_check() {
 	[[ "$1" == "$color" ]] || {
 		color=$1
-		echo -n "%{F$1}"
+		printf "%%{F$1}"
 	};
 }
 
 bspc subscribe report | \
 	while read -r line; do
-		IFS=":"
-		for item in $line; do
-			name=${item#?}
-			case $item in
-				[fFoOuU]*)
-					case $item in
-						[fF]*) c=$c_empty; icon=" " ;;
-						[oO]*) c=$c_busy; icon=\.;;
-						[uU]*) c=$c_urgent; icon=\!;;
-					esac
-					if [[ $item == [FOU]* ]]; then
-						echo -n "%{B$c}%{F$c_bg}$icon%{B-}"
-						color="$c_bg"
-					else
-						color_check $c
-						IFS="" printf "$icon"
-					fi;;
-				[LTG]*) 
-					color_check $c_unknown
-					printf "$name"
-			esac
-		done | IFS= xargs -0 notify-send -t 0 -f 000
+		{
+			IFS=":"
+			for item in $line; do
+				name=${item#?}
+				case $item in
+					[fFoOuU]*)
+						case $item in
+							[fF]*) c=$c_empty; icon=\  ;;
+							[oO]*) c=$c_busy; icon=\.;;
+							[uU]*) c=$c_urgent; icon=\!;;
+						esac
+						if [[ $item == [FOU]* ]]; then
+							printf "%%{B$c}%%{F$c_bg}$icon%%{B-}"
+							color="$c_bg"
+						else
+							color_check $c
+							printf "$icon"
+						fi;;
+					[LTG]*) 
+						color_check -
+						printf "$name"
+				esac
+			done
+		} | xargs -0 notify-send -t 0 -f 000
 	done &
 
-xtitle -s -f '%s' -t 20 | \
+xtitle -s -f '%s\n' -t 20 | \
 	while read -r title; do
-		notify-send -f 001 -t 0 "%{c}%{F-}$title"
+		notify-send -f 001 -t 0 "%{c}%{F$c_busy}$title%{F-}"
 	done &
 
 notify-send -f 002 -t 0 "%{r}"
@@ -65,23 +65,28 @@ c_good=`xget color10`
 c_normal=`xget color12`
 c_bad=`xget color1`
 
-icond() { echo "%{F$c_normal}$1%{F-}"; }
+BAT0="sysctl -n hw.sensors.acpibat0"
+if [[ ! -z "`$BAT0`" ]]; then
+	full=`$BAT0.amphour0 | sed 's/.A.*//'`
+	showbat() {
+		case "`$BAT0.raw0`" in
+			*discharging*) c=$c_bad;;
+			*) c=$c_good;;
+		esac
+		now=`$BAT0.amphour3 | sed 's/.A.*//'`
+		printf "%%{F$c}B%%{F-} %d%%" \
+			`echo "100 * $now / $full" | bc`
+	}
+	SHOWBAT=showbat
+fi
+
 while true; do
 	{
-		icond D; date +"%d/%m %H:%M"
-		icond V; amixer sget Master | grep -Po "\d+%"
-		bat=/sys/class/power_supply/BAT0
-		if [[ -e $bat ]]; then
-			capacity=`cat $bat/capacity`
-			status=`cat $bat/status`
-			[[ $status == Charging ]] && c=$c_good || \
-				[[ $capacity -lt 15 ]] && c=$c_bad
-			c=${c:-$c_normal}
-			echo "%{F$c}P%{F-} $capacity%"
-		fi
+		date +"%%{F$c_normal}D%%{F-} %d/%m %H:%M"
+		$SHOWBAT
 	} | xargs notify-send -f zzz -t 0
 	sleep 60
 done &
 
-notify-send init
+notify-send -i wm Initialized
 wait

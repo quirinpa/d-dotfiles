@@ -1,7 +1,13 @@
-function! MakeTex()
-	w
-	let fname = expand("%:t:r")
-	let result = system("pdflatex " . expand("%") . " && mupdf " . fname . ".pdf")
-	execute system("rm " . fname . ".aux " . fname . ".log")
-	echo result
+function! Preview()
+	silent !pkill -USR1 xdvi
+	redraw!
 endfunction
+
+function! Makefull()
+	write
+	Make
+	call Preview()
+endfunction
+
+nmap <leader>p :call Preview()<cr>
+nmap <leader>M :call Makefull()<cr>

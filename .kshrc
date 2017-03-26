@@ -1,6 +1,10 @@
 export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
+HISTFILE=$HOME/.history
+alias doas=sudo
+alias pkg_add="sudo pacman -S"
 
-set -o emacs
+set -o vi
+bind ^R=search-history
 if [[ $TERM == vt220 ]] || [[ $TERM == linux ]]; then
 	bold="\033[1m"
 	bright() {
