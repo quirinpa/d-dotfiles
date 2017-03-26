@@ -1,39 +1,24 @@
-diff --git a/Makefile b/Makefile
-index a9d4d1d..2e8f3b7 100644
---- a/Makefile
-+++ b/Makefile
-@@ -6,7 +6,7 @@ include config.mk
- SRC = surf.c
- OBJ = ${SRC:.c=.o}
+$OpenBSD$
+--- config.def.h.orig	Sat Dec 19 14:59:30 2015
++++ config.def.h	Tue Jan 17 18:36:28 2017
+@@ -16,9 +16,9 @@ static gfloat zoomlevel = 1.0;       /* Default zoom l
  
--all: options surf
-+all: surf
- 
- options:
- 	@echo surf build options:
-@@ -20,7 +20,7 @@ options:
- 
- ${OBJ}: config.h config.mk
- 
--config.h:
-+config.h: config.def.h /tmp/xcolorsha
- 	@echo creating $@ from config.def.h
- 	@cp config.def.h $@
- 
-diff --git a/config.def.h b/config.def.h
-index 7c2b10f..6f71d51 100644
---- a/config.def.h
-+++ b/config.def.h
-@@ -19,7 +19,7 @@ static char *cookiefile     = "~/.surf/cookies.txt";
- static char *cookiepolicies = "Aa@"; /* A: accept all; a: accept nothing,
+ /* Soup default features */
+ static char *cookiefile     = "~/.surf/cookies.txt";
+-static char *cookiepolicies = "Aa@"; /* A: accept all; a: accept nothing,
++static char *cookiepolicies = "@Aa"; /* A: accept all; a: accept nothing,
                                        * @: accept all except third party */
- static char *cafile         = "/etc/ssl/certs/ca-certificates.crt";
--static Bool strictssl       = FALSE; /* Refuse untrusted SSL connections */
-+static Bool strictssl       = TRUE; /* Refuse untrusted SSL connections */
+-static char *cafile         = "/etc/ssl/certs/ca-certificates.crt";
++static char *cafile         = "/etc/ssl/cert.pem";
+ static Bool strictssl       = FALSE; /* Refuse untrusted SSL connections */
  static time_t sessiontime   = 3600;
  
- /* Webkit default features */
-@@ -33,7 +33,7 @@ static Bool enableinspector       = TRUE;
+@@ -29,11 +29,11 @@ static Bool enablediskcache       = TRUE;
+ static int diskcachebytes         = 5 * 1024 * 1024;
+ static Bool enableplugins         = TRUE;
+ static Bool enablescripts         = TRUE;
+-static Bool enableinspector       = TRUE;
++static Bool enableinspector       = FALSE;
  static Bool enablestyle           = TRUE;
  static Bool loadimages            = TRUE;
  static Bool hidebackground        = FALSE;
@@ -47,7 +32,7 @@ index 7c2b10f..6f71d51 100644
  /* DOWNLOAD(URI, referer) */
  #define DOWNLOAD(d, r) { \
 -	.v = (char *[]){ "/bin/sh", "-c", \
--	     "st -e /bin/sh -c \"curl -g -L -J -O --user-agent '$1'" \
+-	     "st -e /bin/sh -c \"curl -L -J -O --user-agent '$1'" \
 -	     " --referer '$2' -b $3 -c $3 '$0';" \
 -	     " sleep 5;\"", \
 -	     d, useragent, r, cookiefile, NULL \

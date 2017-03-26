@@ -1,0 +1,2 @@
+#!/bin/ksh
+cat $HOME/.passwords/$1

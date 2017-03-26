@@ -4,7 +4,7 @@ trap 'bspc config top_padding 0; kill -TERM -- -$$' EXIT
 height=15
 bspc config top_padding $height
 
-c_bg=`xget background`
+c_bg=`xg background`
 
 in_dir=/tmp/barin
 [ -d $in_dir ] || mkdir $in_dir
@@ -13,11 +13,11 @@ inotifywait -r $in_dir -m -e MODIFY,DELETE,CREATE | \
 		str=$(cat $in_dir/* | tr "\n" " ")
 		echo "${str%?}"
 	done | lemonbar -a 32 -g x$height \
-		-F "`xget color8`" -B "$c_bg" &
+		-F "`xg color8`" -B "$c_bg" &
 
-c_empty=`xget color5`
-c_busy=`xget color13`
-c_urgent=`xget color9`
+c_empty=`xg color5`
+c_busy=`xg color13`
+c_urgent=`xg color9`
 
 color_check() {
 	[[ "$1" == "$color" ]] || {
@@ -54,16 +54,15 @@ bspc subscribe report | \
 		} | xargs -0 notify-send -t 0 -f 000
 	done &
 
-xtitle -s -f '%s\n' -t 20 | \
+xtitle -s -f '%s\n' -t 60 | \
 	while read -r title; do
 		notify-send -f 001 -t 0 "%{c}%{F$c_busy}$title%{F-}"
 	done &
 
 notify-send -f 002 -t 0 "%{r}"
 
-c_good=`xget color10`
-c_normal=`xget color12`
-c_bad=`xget color1`
+c_good=`xg color10`
+c_bad=`xg color1`
 
 BAT0="sysctl -n hw.sensors.acpibat0"
 if [[ ! -z "`$BAT0`" ]]; then
@@ -82,11 +81,12 @@ fi
 
 while true; do
 	{
-		date +"%%{F$c_normal}D%%{F-} %d/%m %H:%M"
 		$SHOWBAT
+		date +"%%{F$c_busy} D%%{F-} %d/%m %H:%M"
 	} | xargs notify-send -f zzz -t 0
 	sleep 60
 done &
 
 notify-send -i wm Initialized
+mailcheck
 wait

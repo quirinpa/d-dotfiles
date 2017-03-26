@@ -1,0 +1,2 @@
+#!/bin/ksh
+sr -browser=lynx duckduckgo $@

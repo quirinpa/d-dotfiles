@@ -1,0 +1,4 @@
+xres/.Xresources
+xres/xres.h
+**/.*.sw?
+.ssh/known_hosts

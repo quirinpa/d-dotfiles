@@ -6,6 +6,9 @@
 
 " Scheme setup {{{
 set background=dark
+set t_Co=8
+set t_Sf=[3%dm
+set t_Sb=[4%dm
 hi! clear
 
 if exists("syntax_on")

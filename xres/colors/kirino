@@ -1,42 +1,23 @@
 ! special
-!#define lightGreen #00ffbd
-!#define lightGreen #29ffc8
-!#define lightGreen #00ff42
 *.foreground:   #b6b6b6
-!*.foreground:   #f3f7ff
-!*.background:   #16161b
 *.background:   #000000
-!*.background:   #1e1e24
-!*.cursorColor:  #a04dff
 *.cursorColor:  #acffda
-!*.cursorColor:       #ee3c84
 
 ! black
-!*.color0:       #000000
 *.color0:       #16161b
-!*.color8:       #837c96
 *.color8:       #6a4e8b
 
 ! red
 *.color1:       #a3299d
-!*.color9:       #c83cee
 *.color9:       #ee3c84
 
 ! green
 *.color2:       #29a389
-!*.color10:      #3beec8
 *.color10:      #69ffbb
-!*.color10:      #acffda
-!*.color10:      #00ff8c
-!*.color10:      #29ffc8
-!*.color10:      lightGreen
 
 ! yellow
 *.color3:       #29a345
-!*.color11:      #07ff63
 *.color11:      #ffa900
-!*.color11:      #00ff42
-!*.color11:      #3bee66
 
 ! blue
 *.color4:       #296ca3
@@ -53,4 +34,5 @@
 ! white
 *.color7:       #728ea3
 *.color15:      #ffffff
-!*.color15:      #b3deff
+
+xterm*colorBD: #ffffff

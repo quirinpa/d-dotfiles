@@ -1,0 +1,14 @@
+#define DefaultFont "Fixed:pixelsize=13:style=semicondensed"
+*font: DefaultFont
+
+*scrollBar: false
+*saveLines: 0
+
+xterm*boldFont: DefaultFont
+
+xterm*termName: xterm-vt220
+xterm*boldMode: false
+xterm*colorBDMode: true
+
+XTerm*metaSendsEscape: true
+XTerm*eightBitInput: false

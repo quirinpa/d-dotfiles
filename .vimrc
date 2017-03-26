@@ -9,6 +9,3 @@ colorscheme qnoctu8
 
 nnoremap <leader>m :Make<cr>
 nmap <leader>r :w<cr>:Bexec()<cr>
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"

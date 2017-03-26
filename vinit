@@ -25,9 +25,8 @@ tpope/vim-fugitive
 tpope/vim-commentary
 tpope/vim-vinegar
 tpope/vim-dispatch
-fboender/bexec
-vim-scripts/pydoc.vim
-vim-scripts/identpython.vim
+kana/vim-fakeclip
+vim-scripts/indentpython.vim
 EOF
 
 echo -n "proceeding will delete all other bundles (y/*) "
