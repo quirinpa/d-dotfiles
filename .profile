@@ -1,9 +1,48 @@
-# $OpenBSD: dot.profile,v 1.4 2005/02/16 06:56:57 matthieu Exp $
-#
-# sh/ksh initialization
+JAVA_HOME=/usr/local/jdk-1.8.0
+GRADLE_HOME=~/gradle-2.11
+PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin
 
-PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/6.0/packages/i386/
-PATH=$PATH:/usr/games
-ENV=$HOME/.kshrc
+. ~/.profile.local
+
+VISUAL=vim
+EDITOR=ed
 BROWSER=lynx
-EDITOR=vim
+
+HISTFILE=~/.history
+INPUTRC=~/.inputrc
+
+shortpwd() { 
+	[[ ${PWD#$HOME} == $PWD ]] && \
+		echo $PWD || echo \~${PWD#$HOME} ; }
+
+SITE=$LOGNAME@`hostname`
+
+if [[ $TERM == xterm* ]]; then
+	title() {
+		p="`shortpwd` "
+		echo -ne "]2;$SITE: $p"
+	}
+	tpwd() { true; }
+else
+	title() { true; }
+	alias tpwd=shortpwd
+fi
+
+pre=
+test $SHELL == /bin/ksh && \
+	set -o vi || \
+	pre=\ 
+
+p="\[`tput bold`\]"
+test $LOGNAME == root && \
+	ep=$p"\[`tput setaf 1`\]#" || \
+	p=$p"\[`tput setaf 0`\]$"
+
+maybeerr() { err=$? && test $err != 0 && echo $err\  ; }
+
+pre=$pre"\[`tput setaf 1`\]"
+mid="\[`tput setaf 7`\]"
+end="\[`tput setaf 4`\]$p \[`tput sgr0`\]"
+
+PS1=$pre"\$(maybeerr)"$mid"\[\$(title)\]\$(tpwd)"$end
+alias ls="ls -F"

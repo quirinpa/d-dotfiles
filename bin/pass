@@ -1,2 +1,2 @@
 #!/bin/ksh
-gpg2 -d $HOME/.passwords/$1.gpg
+cat $HOME/.passwords/$1

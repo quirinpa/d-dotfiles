@@ -23,9 +23,9 @@ nd=/tmp/barin
 if [[ ! -z "$icon" ]]; then
 	urgency=${urgency:-1}
 	case $urgency in
-		0) i_c=`xget color10`;;
-		1) i_c=`xget color12`;;
-		2) i_c=`xget color1`;;
+		0) i_c=`xg color10`;;
+		1) i_c=`xg color13`;;
+		2) i_c=`xg color1`;;
 	esac
 	str="%{F$i_c}$icon%{F-}"
 	[[ -z $message ]] || str="$str "

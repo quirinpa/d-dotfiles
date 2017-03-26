@@ -1,14 +1,11 @@
 #!/bin/ksh -e
 
-# $HOME/bin must go first because of notify-send FIXME
-PATH=$HOME/bin:$PATH
+PATH=$HOME/bin:$PATH # FIXME (notify-send)
+BROWSER=surf
 
 /usr/X11R6/bin/xrdb -load .Xresources
-feh --bg-fill lain.jpg
+xidle -timeout 300 -program "/usr/local/bin/slock" &
 
 toggle_touchpad
+xterm -ls &
 exec bspwm
-
-gpg-connect-agent /bye
-
-# redshift -t 5700:3500 &

@@ -2,6 +2,6 @@
 oldstatus=`synclient | awk '/Touch/ {print $3}'`
 status=$(( 1 - $oldstatus))
 [[ $status == 0 ]] &&
-	notify-send -f zza -i To -t 0 -u 0 ||
-	notify-send -f zza -i To -t 0 -u 2
+	notify-send -f zza -i R -t 0 -u 2 ||
+	notify-send -f zza -i R -t 0 -u 0
 synclient TouchpadOff=$status
