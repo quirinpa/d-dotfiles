@@ -1,0 +1,85 @@
+#!/bin/sh -ev
+site=$1
+interface=athn0
+
+echo -n SITE $1\  >&2
+
+config=`mktemp /tmp/wpasXXXXXX`
+echo 'ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=wheel
+ap_scan=0
+network={
+	ssid="eduroam"
+	key_mgmt=WPA-EAP
+	eap=PEAP
+	phase2="auth=MSCHAPV2"
+	identity="2014215@uma.pt"
+	password="g5h7HM9a3H"
+	priority=1
+}' > $config
+
+scan() {
+	ifconfig $interface scan | sed -ne 's/.* eduroam chan [^ ]* bssid \([^ ]*\) .*/\1/p'
+}
+
+
+CACHE=$HOME/.cache/wpa/eduroam
+SITECACHE=$CACHE/$site
+echo SAVING TO $SITECACHE
+if [ -e $SITECACHE ]; then
+	echo -n "EXISTS. SCAN/ADD/OVERWRITE? (y/*) " >&2
+	read to_scan
+
+	if [[ "$to_scan" == "y" ]]; then
+		scan > $SITECACHE
+		# sort $SITECACHE > $SITECACHE
+	fi
+else
+	echo DOESN\'T EXIST. CREATING... >&2
+	mkdir -p $CACHE || true
+	scan > $SITECACHE
+fi
+
+finish() {
+	ifconfig $interface down
+	rm $config
+	kill 0
+}
+
+trap "finish" EXIT
+
+try_dhclient() {
+	dhclient $interface | while read dhcline; do \
+		case $dhcline in
+			*bound*) return 0;;
+			*)
+		esac
+	done &
+
+	sleep 20
+	pkill dhclient
+	wait
+	return 1
+}
+
+connect() {
+	echo CONNECTING TO $1... >&2
+
+	ifconfig $interface nwid eduroam bssid $1 wpa wpaakms 802.1x up
+	wpa_supplicant -i $interface -c $config | while read line;
+	do
+		case $line in
+			*DISCONNECTED*|*failed*|*timed\ out*) return 1;;
+			*Connection*completed*)
+				try_dhclient && return 1;;
+			*) echo $line;;
+		esac
+	done &
+	trap "kill $!" INT
+	wait
+}
+
+cat $SITECACHE | while read bssid; do connect $bssid; done
+
+wait
+finish

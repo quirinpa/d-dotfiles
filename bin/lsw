@@ -1,0 +1,6 @@
+#!/bin/ksh
+
+bspc query -N | xargs printf "%d\n" | while read line
+do
+	xdotool getwindowname $line 2>/dev/null | xargs echo $line\ || true
+done

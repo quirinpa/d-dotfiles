@@ -6,5 +6,5 @@ pxe_remote_network_boot http://www.kegel.com/linux/pxe.html
 moodle http://moodle.cee.uma.pt/
 ce http://jglg.uma.pt/Ens/Cexp/index.php
 mschapv2 http://undeadly.org/cgi?action=article&sid=20130128142215
-https://www.google.pt/search?q=bsd+make+include&num=30&gws_rd=cr,ssl&ei=_32lWOuBNILTa7zKg5gN#q=bsd+make+recursive
 functionallyParanoid https://functionallyparanoid.com/
+https://en.wikibooks.org/wiki/Guide_to_Unix/BSD/OpenBSD/As_a_Firewall

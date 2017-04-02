@@ -4,16 +4,18 @@ PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin
 
 . ~/.profile.local
 
-VISUAL=vim
-EDITOR=ed
-BROWSER=lynx
+export VISUAL="vim"
+export EDITOR="ed"
+export BROWSER="lynx"
 
 HISTFILE=~/.history
 INPUTRC=~/.inputrc
 
+alias ddg="sr duckduckgo"
+
 shortpwd() { 
 	[[ ${PWD#$HOME} == $PWD ]] && \
-		echo $PWD || echo \~${PWD#$HOME} ; }
+		echo $PWD\  || echo \~${PWD#$HOME}\  ; }
 
 SITE=$LOGNAME@`hostname`
 
@@ -26,6 +28,7 @@ if [[ $TERM == xterm* ]]; then
 else
 	title() { true; }
 	alias tpwd=shortpwd
+	export TERM=ansi
 fi
 
 pre=

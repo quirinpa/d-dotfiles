@@ -18,6 +18,9 @@ super + ctrl + m
 
 # program launcher
 super + space
+	BROWSER=surf echo | dmenu -p "web search:" | xargs sr -graphical duckduckgo
+
+super + s
 	BROWSER=surf srg
 
 super + F4
@@ -37,10 +40,6 @@ super + {_,shift + }w
 super + m
 	bspc desktop -l next
 
-# alternate between the tiled and monocle layout
-super + {t,shift + t,s,f}
-	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
-
 super + {r,shift + r}
 	bspc node -R {90,-90}
 
@@ -57,7 +56,7 @@ super + g
 #
 
 # set the window state
-super + {t,shift + t,s,f}
+super + {t,shift + t,shift + s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
