@@ -1,84 +1,23 @@
-#!/bin/ksh
-set -e
+#!/bin/ksh -e
+[[ -d ~/.vim ]] || mkdir ~/.vim
 
-CACHE=$HOME/.cache/xcolors
-INCLUDE=$HOME/include/xres.h
-SCHEME=$CACHE/.sha
-
-mkdir -p $CACHE || true
-
-xscheme=${1-xcolors/kirino}
-xschemesum=$(sha1sum $xscheme | awk '{print $1}')
-[ -e $SCHEME ] && [ "`cat $SCHEME`" == "$xschemesum" ] &&
-	scheme_changed=false || scheme_changed=true
-
-echo -n SCHEME $xscheme\ 
-$scheme_changed && echo NEW && {
-	rm -f $CACHE/* $XRES_H $HOME/.Xresources $INCLUDE
-
-	echo -en "#!/bin/ksh\ncat $CACHE/\$1" > $HOME/bin/xget
-	chmod +x $HOME/bin/xget
-
-	cat .Xresources $xscheme | while read line; do
-		echo $line >> $HOME/.Xresources
-
-		if [[ $line == \** ]]; then
-			echo $line | cut -c 2- | tr -d '\ \t\.' | {
-				IFS=\: read key val
-				echo $val > "$CACHE/$key"
-				echo "#define XRES_$key \"$val\"" >> $INCLUDE
-			}
-		fi
-
-	done
-
-	[ -e $CACHE/font ] || {\
-		# DEFAULT_FONT="VGA: pixelsize=19"
-		DEFAULT_FONT="Fixed: pixelsize=13: style=semicondensed"
-		echo $DEFAULT_FONT > $CACHE/font
-		echo "#define XRES_font \"$DEFAULT_FONT\"" >> $INCLUDE
-	}
-} || echo SAME && echo $xschemesum > $SCHEME
-echo $xschemesum > /tmp/xcolorsha
-
-SOURCEDIR=${SOURCEDIR:-$HOME/sc}
-
-lsnames() {
-	ls -l $1 | tail -n +2 | awk '{print $9}'
-}
-
-clinstall() {
-	name=$(basename $1)
-	dir=$2/$name
-	sdir=$SOURCEDIR/$dir
-	pdir=patches/$dir
-	m(){
-		make -C $sdir --no-print-directory $@
-	}
-	g(){
-		git -C $sdir $@
-	}
-
-	if [[ -e $sdir ]]; then
-		echo DIRTY $sdir
-	else
-		echo CLEAN
-		git clone $1 $sdir
-		g am --signoff < $pdir
-	fi
-
-	$scheme_changed && m clean 
-	m -q || {
-		m
-		sudo make -C $sdir --no-print-directory install
-	}
-}
-
-cat patches/.sources | while read url subdir; do
-	echo SOURCE $url $subdir
-	mkdir -p $SOURCEDIR/$subdir || true
-	 lsnames patches/$subdir | while read -r app; do
-		clinstall "$url/$app" $subdir
-	done
-done
-
+PWD=$(cd $(dirname $0) && pwd)
+while read line
+do
+	ln -fs $PWD/$line ~/$line
+done << EOF
+bin
+.inputrc
+.profile.local
+.profile
+.vimrc
+.vim/ftplugin
+.vim/colors
+.xsession
+.Xresources
+.config/sxhkd
+.config/bspwm
+.config/surfraw
+.screenrc
+.xdvirc
+EOF

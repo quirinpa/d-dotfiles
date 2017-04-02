@@ -1,0 +1,28 @@
+set editing-mode emacs
+set bell-style visible
+
+set show-mode-in-prompt On
+set keyseq-timeout 50ms
+set vi-cmd-mode-string :
+set vi-ins-mode-string +
+
+set keymap emacs
+"\C-t1": vi-editing-mode
+Control-T: "1"
+
+set keymap vi-command
+Control-T: emacs-editing-mode
+?: history-search-backward
+/: history-search-forward
+
+set keymap vi-insert
+Control-T: emacs-editing-mode
+Control-P: previous-history
+Control-N: next-history
+Control-/: history-search-backward
+Control-A: beginning-of-line
+Control-E: end-of-line
+Control-F: forward-char
+Control-B: backward-char
+Meta-F: forward-word
+Meta-B: backward-word
