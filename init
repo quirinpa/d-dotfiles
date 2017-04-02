@@ -1,0 +1,23 @@
+#!/bin/ksh -e
+[[ -d ~/.vim ]] || mkdir ~/.vim
+
+PWD=$(cd $(dirname $0) && pwd)
+while read line
+do
+	ln -fs $PWD/$line ~/$line
+done << EOF
+bin
+.inputrc
+.profile.local
+.profile
+.vimrc
+.vim/ftplugin
+.vim/colors
+.xsession
+.Xresources
+.config/sxhkd
+.config/bspwm
+.config/surfraw
+.screenrc
+.xdvirc
+EOF

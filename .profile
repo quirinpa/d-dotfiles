@@ -1,6 +1,6 @@
 JAVA_HOME=/usr/local/jdk-1.8.0
 GRADLE_HOME=~/gradle-2.11
-PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin
+PATH=$HOME/bin:$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin
 
 . ~/.profile.local
 
