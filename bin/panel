@@ -1,4 +1,4 @@
-#!/bin/ksh -ev
+#!/bin/ksh -e
 trap 'bspc config top_padding 0; kill -TERM -- -$$' EXIT
 
 height=15
