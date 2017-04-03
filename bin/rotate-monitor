@@ -6,3 +6,5 @@
 	xrandr -o left
 	touch /tmp/monitorRotated
 }
+pkill panel
+panel
