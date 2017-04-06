@@ -1,7 +1,4 @@
 #include "/etc/X11/Xresources"
-#define DefaultFont "Fixed:pixelsize=13:style=semicondensed"
-*font: DefaultFont
-
 *scrollBar: false
 *saveLines: 0
 
