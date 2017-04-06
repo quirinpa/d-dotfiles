@@ -1,4 +1,4 @@
-#!/bin/sh -ev
+#!/bin/sh -e
 site=$1
 interface=athn0
 
