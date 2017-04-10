@@ -1,5 +1,13 @@
 #!/bin/ksh -e
-trap 'bspc config top_padding 0; kill -TERM -- -$$' EXIT
+
+# TODO FIX PPIDS OR WRITE THIS IN C
+finish() {
+	bspc config top_padding 0
+	pkill lemonbar
+	pkill -P -$$
+}
+
+trap 'finish' EXIT INT
 
 height=15
 bspc config top_padding $height
@@ -90,3 +98,4 @@ done &
 notify-send -i wm Initialized
 mailcheck
 wait
+finish

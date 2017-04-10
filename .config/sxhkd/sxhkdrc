@@ -2,7 +2,6 @@
 # wm independent hotkeys
 #
 
-
 # terminal emulator
 super + Return
 	xterm -ls
@@ -18,7 +17,7 @@ super + ctrl + m
 
 # program launcher
 super + space
-	BROWSER=surf echo | dmenu -p "web search:" | xargs sr -graphical duckduckgo
+	websearch
 
 super + s
 	BROWSER=surf srg

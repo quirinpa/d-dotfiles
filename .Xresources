@@ -1,7 +1,4 @@
 #include "/etc/X11/Xresources"
-#define DefaultFont "Fixed:pixelsize=13:style=semicondensed"
-*font: DefaultFont
-
 *scrollBar: false
 *saveLines: 0
 
@@ -13,3 +10,5 @@ xterm*colorBDMode: true
 
 XTerm*metaSendsEscape: true
 XTerm*eightBitInput: false
+XTerm*decTerminalID: vt340
+XTerm*numColorRegisters: 256

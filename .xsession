@@ -6,7 +6,10 @@ export GBROWSER=surf
 xrdb -load .Xresources
 xidle -timeout 300 -program "/usr/local/bin/slock" &
 
-toggle_touchpad
+if test $(hostname) == "qant.lan"; then
+	toggle_touchpad
+	xbanish &
+fi
+
 xterm -ls &
-xbanish &
 exec bspwm

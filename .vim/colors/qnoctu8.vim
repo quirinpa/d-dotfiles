@@ -30,7 +30,7 @@ hi! link VertSplit StatusLine
 hi! link TabLine StatusLine
 hi! link TabLineSel WildMenu
 
-hi SpellBad ctermfg=1
+hi SpellBad ctermfg=1 ctermbg=0
 hi SpellCap ctermfg=2 cterm=bold
 hi SpellRare ctermfg=3 cterm=bold
 hi SpellLocal ctermfg=5 cterm=bold

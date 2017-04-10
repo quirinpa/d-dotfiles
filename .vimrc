@@ -1,5 +1,5 @@
 set shiftwidth=2 tabstop=2 smarttab hidden cursorline wildmenu
-set wildignore+=*.o title path+=** list tags=./tags nu mouse=a
+set wildignore+=*.o,*.class title path+=** list tags=./tags nu mouse=a
 
 execute pathogen#infect()
 syntax on
