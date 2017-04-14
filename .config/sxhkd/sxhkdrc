@@ -23,7 +23,7 @@ super + s
 	BROWSER=surf srg
 
 super + F4
-	notify-send -i wm sxhkd reloaded ;\
+	echo Nn sxhkd reloaded > $PANEL_FIFO ;\
 	pkill -USR1 -x sxhkd
 
 # super + shift + slash

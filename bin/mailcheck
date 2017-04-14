@@ -1,5 +1,5 @@
 #!/bin/ksh
 mail=`cat /var/mail/quirinpa`
 test -z "$mail" && \
-	/home/quirinpa/bin/notify-send -f zz9 -i @ -u 0 -t 0 || \
-	/home/quirinpa/bin/notify-send -f zz9 -i @ -u 2 -t 0
+	echo @g >> /tmp/bar ||
+	echo @b >> /tmp/bar

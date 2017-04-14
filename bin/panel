@@ -1,101 +1,113 @@
-#!/bin/ksh -e
+#!/usr/local/bin/ksh93 -e
+f="rm $PANEL_FIFO;"
 
-# TODO FIX PPIDS OR WRITE THIS IN C
-finish() {
-	bspc config top_padding 0
-	pkill lemonbar
-	pkill -P -$$
-}
+echo PANEL_FIFO: $PANEL_FIFO >&2
 
-trap 'finish' EXIT INT
-
-height=15
+height=13
 bspc config top_padding $height
+f="bspc config top_padding 0; kill 0;"
 
-c_bg=`xg background`
+# cache a couple of colors
+c_normal=`xg color13`; c_good=`xg color10`
+c_bad=`xg color9`; c_bg=`xg background`
 
-in_dir=/tmp/barin
-[ -d $in_dir ] || mkdir $in_dir
-inotifywait -r $in_dir -m -e MODIFY,DELETE,CREATE | \
-	while read -r ufile ; do
-		str=$(cat $in_dir/* | tr "\n" " ")
-		echo "${str%?}"
-	done | lemonbar -a 32 -g x$height \
-		-F "`xg color8`" -B "$c_bg" &
+format_notification() {
+	fmts=`echo $2|cut -c1`
+	text=`echo $2|cut -c2-`
+	[ -z "$text" ] && text="" || true
 
-c_empty=`xg color5`
-c_busy=`xg color13`
-c_urgent=`xg color9`
+	fb=F
+	if [[ $fmts == [GBN] ]]; then fb=B ; fi
 
-color_check() {
-	[[ "$1" == "$color" ]] || {
-		color=$1
-		printf "%%{F$1}"
-	};
+	color=$c_normal
+	case $fmts in
+		G|g) color=$c_good;;
+		B|b) color=$c_bad;;
+	esac
+
+	echo "%{$fb$color}$1%{$fb""-}$text"
 }
 
-bspc subscribe report | \
-	while read -r line; do
-		{
-			IFS=":"
-			for item in $line; do
+mkdir /tmp/notifications || true
+typeset -A extra; nid=0
+tail -f $PANEL_FIFO | while read line
+do
+	typ=`echo $line | cut -c1`
+	raw=`echo $line | cut -c2-`
+	echo $typ $raw >&2
+
+	case $typ in
+		T) title=$raw;;
+		W) # make a pretty bspwm status bar
+			wm= ; OIFS=$IFS; IFS=:
+			for item in $raw ; do
 				name=${item#?}
 				case $item in
 					[fFoOuU]*)
+						c=$c_normal
 						case $item in
-							[fF]*) c=$c_empty; icon=\  ;;
-							[oO]*) c=$c_busy; icon=\.;;
-							[uU]*) c=$c_urgent; icon=\!;;
+							[fF]*) icon=\ ;;
+							[oO]*) icon=\.;;
+							[uU]*) c=$c_bad; icon=\!;;
 						esac
 						if [[ $item == [FOU]* ]]; then
-							printf "%%{B$c}%%{F$c_bg}$icon%%{B-}"
-							color="$c_bg"
+							c=`echo $c|awk '{print toupper($0)}'`
+							wm=$wm%{F$c_bg}%{B$c}$icon%{B-}%{F-}
 						else
-							color_check $c
-							printf "$icon"
+							wm=$wm$icon
 						fi;;
 					[LTG]*) 
-						color_check -
-						printf "$name"
+						wm="$wm$name";;
+					*);;
 				esac
 			done
-		} | xargs -0 notify-send -t 0 -f 000
-	done &
+			IFS=$OIFS
+			;;
+		N)
+			format_notification $typ "$raw" >> /tmp/notifications/$nid
+			notifications=
+			ls /tmp/notifications | while read line; do \
+				notifications+=" `cat /tmp/notifications/$line`"
+			done
+			{ sleep 8 ; rm /tmp/notifications/$nid ; } &;
+			((nid++)) ;;
+		[@BPD]) extra[$typ]="`format_notification $typ "$raw"`";;
+	esac
 
-xtitle -s -f '%s\n' -t 60 | \
-	while read -r title; do
-		notify-send -f 001 -t 0 "%{c}%{F$c_busy}$title%{F-}"
-	done &
+	# IFS=\ 
+	echo "$wm $title%{r}${notifications} ${extra[@]}"
+done | lemonbar -a 32 -g x$height \
+	-F "`xg color8`" -B "$c_fg" & ; f=$f"pkill lemonbar;"
 
-notify-send -f 002 -t 0 "%{r}"
-
-c_good=`xg color10`
-c_bad=`xg color1`
+{
+	bspc subscribe report & ; f=$f"kill $!"
+	xtitle -s -f "T%s\n" -t 60 & ; f=$f"kill $!"
+	wait
+} >> $PANEL_FIFO &
+	f=$f"kill $!"
 
 BAT0="sysctl -n hw.sensors.acpibat0"
 if [[ ! -z "`$BAT0`" ]]; then
 	full=`$BAT0.amphour0 | sed 's/.A.*//'`
+
 	showbat() {
-		case "`$BAT0.raw0`" in
-			*discharging*) c=$c_bad;;
-			*) c=$c_good;;
-		esac
+		fmt=
+		test "`$BAT0.raw0`" == *discharging*  && fmt=b || fmt=g
+
 		now=`$BAT0.amphour3 | sed 's/.A.*//'`
-		printf "%%{F$c}B%%{F-} %d%%" \
-			`echo "100 * $now / $full" | bc`
+		printf "B$fmt %d\n" `echo "100 * $now / $full" | bc`
 	}
+
 	SHOWBAT=showbat
 fi
 
 while true; do
-	{
-		$SHOWBAT
-		date +"%%{F$c_busy} D%%{F-} %d/%m %H:%M"
-	} | xargs notify-send -f zzz -t 0
+	{ $SHOWBAT ; date +"Dn %d/%m %H:%M" ; } >> $PANEL_FIFO
 	sleep 60
-done &
+done & ; f=$f"kill $!"
 
-notify-send -i wm Initialized
 mailcheck
+
+trap "$f" EXIT INT
 wait
-finish
+$f

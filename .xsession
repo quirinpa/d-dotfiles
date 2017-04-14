@@ -1,6 +1,7 @@
 #!/bin/ksh -e
 
-PATH=$HOME/bin:$PATH # FIXME (notify-send)
+PATH=$HOME/bin:$PATH
+export PANEL_FIFO=/tmp/bar
 export GBROWSER=surf
 
 xrdb -load .Xresources

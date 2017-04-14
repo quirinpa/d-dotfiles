@@ -1,4 +1,0 @@
-#!/bin/ksh
-pkill panel
-panel
-notify-send -i wm panel reloaded
