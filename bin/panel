@@ -1,4 +1,4 @@
-#!/usr/local/bin/ksh93 -e
+# !/bin/ksh -e
 f="rm $PANEL_FIFO;"
 
 echo PANEL_FIFO: $PANEL_FIFO >&2
@@ -29,12 +29,12 @@ format_notification() {
 }
 
 mkdir /tmp/notifications || true
-typeset -A extra; nid=0
+nid=0
 tail -f $PANEL_FIFO | while read line
 do
 	typ=`echo $line | cut -c1`
 	raw=`echo $line | cut -c2-`
-	echo $typ $raw >&2
+	# echo $typ $raw >&2
 
 	case $typ in
 		T) title=$raw;;
@@ -67,24 +67,26 @@ do
 			format_notification $typ "$raw" >> /tmp/notifications/$nid
 			notifications=
 			ls /tmp/notifications | while read line; do \
-				notifications+=" `cat /tmp/notifications/$line`"
+				notifications+=" `cat /tmp/notifications/$line`" ;\
 			done
-			{ sleep 8 ; rm /tmp/notifications/$nid ; } &;
-			((nid++)) ;;
-		[@BPD]) extra[$typ]="`format_notification $typ "$raw"`";;
+			{ sleep 8 ; rm /tmp/notifications/$nid ; } &
+			((nid++));;
+			[MPBD]) eval "e$typ=\" `format_notification $typ "$raw"`\""
+			;;
 	esac
 
-	# IFS=\ 
-	echo "$wm $title%{r}${notifications} ${extra[@]}"
+	echo "$wm $title%{r}${notifications}$eM$eP$eB$eD"
 done | lemonbar -a 32 -g x$height \
-	-F "`xg color8`" -B "$c_fg" & ; f=$f"pkill lemonbar;"
+	-F "`xg color8`" -B "$c_fg" &
+f=$f"pkill lemonbar;"
 
 {
-	bspc subscribe report & ; f=$f"kill $!"
-	xtitle -s -f "T%s\n" -t 60 & ; f=$f"kill $!"
+	bspc subscribe report &
+	f=$f"kill $!"
+	xtitle -s -f "T%s\n" -t 60 &
+	f=$f"kill $!"
 	wait
 } >> $PANEL_FIFO &
-	f=$f"kill $!"
 
 BAT0="sysctl -n hw.sensors.acpibat0"
 if [[ ! -z "`$BAT0`" ]]; then
@@ -104,7 +106,8 @@ fi
 while true; do
 	{ $SHOWBAT ; date +"Dn %d/%m %H:%M" ; } >> $PANEL_FIFO
 	sleep 60
-done & ; f=$f"kill $!"
+done &
+f=$f"kill $!"
 
 mailcheck
 
