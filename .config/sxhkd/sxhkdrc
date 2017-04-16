@@ -20,7 +20,7 @@ super + space
 	websearch
 
 super + s
-	BROWSER=surf srg
+	asksite | xargs $BROWSER
 
 super + F4
 	echo Nn sxhkd reloaded > $PANEL_FIFO ;\

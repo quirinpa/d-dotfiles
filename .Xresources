@@ -12,3 +12,6 @@ XTerm*metaSendsEscape: true
 XTerm*eightBitInput: false
 XTerm*decTerminalID: vt340
 XTerm*numColorRegisters: 256
+
+xterm*locale: true
+xterm*utf8: 1
