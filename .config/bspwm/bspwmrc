@@ -1,32 +1,28 @@
 #!/bin/ksh -e
 
-trap "kill 0" INT
+f="kill 0;"
 
-if [ $(hostname) == qbit ]; then
-	bspc monitor HDMI-0 -d 0 1 2 3 4 5 6 7 8
-	bspc monitor VGA-0 -d 9
-else
-	bspc monitor -d 0 1 2 3 4 5 6 7 8 9
-fi
+bspc monitor -d 0 1 2 3 4 5 6 7 8 9
 
-bspc config focused_border_color `xg color13`
-bspc config normal_border_color `xg color0`
+while read line; do
+	bspc config $line
+done <<EOF
+focused_border_color `xg color13`
+normal_border_color `xg color0`
+border_width 1
+window_gap 0
+split_ratio 0.50
+borderless_monocle true
+gapless_monocle true
+single_monocle true
+click_to_focus true
+EOF
 
-bspc config border_width         1
-bspc config window_gap          0
-
-bspc config split_ratio          0.50
-bspc config borderless_monocle   true
-bspc config gapless_monocle      true
-bspc config single_monocle      true
-
-bspc rule -a Gimp desktop='^8' state=floating follow=on
-bspc rule -a Chromium desktop='^2'
-bspc rule -a mplayer2 state=floating
-bspc rule -a Kupfer.py focus=on
-bspc rule -a Screenkey manage=off
-
+bspc config external_rules_command `which bspwm_external`
 panel &
+f=$f"kill $!;"
 sxhkd &
+f=$f"kill $!"
 
+trap "$f" INT
 wait

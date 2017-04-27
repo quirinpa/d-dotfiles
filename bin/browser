@@ -1,0 +1,14 @@
+#!/bin/ksh -e
+
+cache=$HOME/.cache/tabbed-browser
+mkdir -p $cache || true
+desktop=`bspc query -D -d`
+
+file=$cache/$desktop
+[[ -e $file ]] || { tabbed -c | cat - > $file && rm $file ; }&
+
+while test ! -e $file; do
+	sleep 1
+done
+
+surf -e `cat $file` $@

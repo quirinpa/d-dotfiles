@@ -1,17 +1,15 @@
-JAVA_HOME=/usr/local/jdk-1.8.0
-GRADLE_HOME=~/gradle-2.11
-PATH=$HOME/bin:$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin
+# JAVA_HOME=/usr/local/jdk-1.8.0
+export PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/6.0/packages/i386/
+PATH=$PATH:~/.local/bin:~/bin:/usr/games:$JAVA_HOME/bin
 
 . ~/.profile.local
 
-export VISUAL="vim"
+export VISUAL="vi"
 export EDITOR="ed"
 export BROWSER="lynx"
 
 HISTFILE=~/.history
-INPUTRC=~/.inputrc
-
-alias ddg="sr duckduckgo"
+set -o emacs
 
 shortpwd() { 
 	[[ ${PWD#$HOME} == $PWD ]] && \
@@ -31,10 +29,8 @@ else
 	export TERM=ansi
 fi
 
-pre=
-test $SHELL == /bin/ksh && \
-	set -o vi || \
-	pre=\ 
+# pre=" "
+# [[ $SHELL != /bin/ksh ]] || pre=
 
 p="\[`tput bold`\]"
 test $LOGNAME == root && \

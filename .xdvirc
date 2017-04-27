@@ -8,7 +8,11 @@
 !!! if you want to get rid of all these customizations,
 !!! or start xdvi with the `-q' option to ignore this file.
 !!!
-xdvi.fileHistory:	0 /home/quirinpa/uma/ie/2/main.dvi\n\
+xdvi.fileHistory:	1 /home/quirinpa/uma/poo/apresentacao/main.dvi\n\
+0 /home/quirinpa/uma/ie/2/main.dvi\n\
 1 /home/quirinpa/ie/1/main.dvi\n\
 1 /home/quirinpa/ie/relatorio.dvi
+xdvi.dvipsPrinterString:	lpr
+xdvi.defaultPrintingTarget:	1
+xdvi.dvipsOptionsString:	
 xdvi.keepPosition:	True

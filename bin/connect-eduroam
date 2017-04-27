@@ -1,6 +1,7 @@
 #!/bin/sh -e
 site=$1
 interface=athn0
+# interface=run0
 
 echo -n SITE $1\  >&2
 

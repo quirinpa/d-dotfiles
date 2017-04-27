@@ -1,0 +1,2 @@
+set gui=notabs,nonavigation
+set editor=xterm\ -e\ vim

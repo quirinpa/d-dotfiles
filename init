@@ -13,6 +13,7 @@ bin
 .vimrc
 .vim/ftplugin
 .vim/colors
+.vimperatorrc
 .xsession
 .Xresources
 .config/sxhkd

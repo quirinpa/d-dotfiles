@@ -1,16 +1,11 @@
 #!/bin/ksh -e
 
-f="rm $PANEL_FIFO;"
-
-echo PANEL_FIFO: $PANEL_FIFO >&2
-
-height=13
-bspc config top_padding $height
-f="bspc config top_padding 0; kill 0;"
+f="rm $PANEL_FIFO; bspc config top_padding 0; kill 0;"
 
 # cache a couple of colors
 c_normal=`xg color13`; c_good=`xg color10`
 c_bad=`xg color9`; c_bg=`xg background`
+c_fg=`xg foreground` #VISIBLE
 
 format_notification() {
 	fmts=`echo $2|cut -c1`
@@ -76,8 +71,8 @@ do
 	esac
 
 	echo "$wm $title%{r}$notif$eM$eP$eB${eD%?}"
-done | lemonbar -a 32 -g x$height \
-	-F "`xg color8`" -B "$c_fg" &
+done | lemonbar -a 32 \
+	-F "$c_fg" -B "$c_bg" -f "`xg font`" &
 f=$f"pkill lemonbar;"
 
 {

@@ -2,15 +2,20 @@
 
 PATH=$HOME/bin:$PATH
 export PANEL_FIFO=/tmp/bar
-export GBROWSER=surf
+export GBROWSER=browser
 
 xrdb -load .Xresources
-xidle -timeout 300 -program "/usr/local/bin/slock" &
+xidle -timeout 300 -program "/usr/local/bin/xlock" &
 
-if test $(hostname) == "qant.lan"; then
-	toggle_touchpad
-	xbanish &
-fi
+xmodmap $HOME/.xmodmaprc
+keynav &
 
-xterm -ls &
-exec bspwm
+[[ ! -e ~/.xsession.local ]] || \
+	. ~/.xsession.local
+
+xbiff -geometry +5-5 &
+xclock -geometry +60-12 &
+xterm -geometry 80x30+5-60 &
+
+exec cwm
+# exec bspwm
