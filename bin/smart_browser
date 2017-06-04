@@ -1,0 +1,7 @@
+#!/bin/ksh -e
+
+case $1 in
+	http://www.google.com*)
+		curl -Ls $1 #| sed -n '/div class=\"g\"/p'
+		;;
+esac

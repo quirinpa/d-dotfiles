@@ -1,2 +1,0 @@
-#!/bin/ksh
-bitcoin-cli -datadir=/mnt/safe/bitcoin $@

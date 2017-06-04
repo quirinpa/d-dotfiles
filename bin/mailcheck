@@ -1,5 +1,0 @@
-#!/bin/ksh
-mail=`cat /var/mail/quirinpa`
-test -z "$mail" && \
-	echo Mg >> /tmp/bar ||
-	echo Mb >> /tmp/bar

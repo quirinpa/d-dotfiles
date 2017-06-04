@@ -1,47 +1,25 @@
-# JAVA_HOME=/usr/local/jdk-1.8.0
 export PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/6.0/packages/i386/
-PATH=$PATH:~/.local/bin:~/bin:/usr/games:$JAVA_HOME/bin
+export PATH=$PATH:~/.local/bin:~/bin:/usr/games:/usr/local/jdk-1.8.0/bin
 
-. ~/.profile.local
-
-export VISUAL="vi"
-export EDITOR="ed"
-export BROWSER="lynx"
+# export VISUAL=vim
+# export EDITOR=ed
+export BROWSER=lynx
 
 HISTFILE=~/.history
+
 set -o emacs
+echo $LOGNAME@`hostname`
+red="\033[31m"
+bold="\033[1m"
+reset="\033[0m"
 
-shortpwd() { 
-	[[ ${PWD#$HOME} == $PWD ]] && \
-		echo $PWD\  || echo \~${PWD#$HOME}\  ; }
+maybeerr() { err=$? && test $err != 0 && echo \\[$red\\]$err\  ; }
 
-SITE=$LOGNAME@`hostname`
+PS1="\$(maybeerr)\[$bold\]\$ \[$reset\]"
 
-if [[ $TERM == xterm* ]]; then
-	title() {
-		p="`shortpwd` "
-		echo -ne "]2;$SITE: $p"
-	}
-	tpwd() { true; }
-else
-	title() { true; }
-	alias tpwd=shortpwd
-	export TERM=ansi
-fi
+export LC_CTYPE=en_US.UTF-8
 
-# pre=" "
-# [[ $SHELL != /bin/ksh ]] || pre=
-
-p="\[`tput bold`\]"
-test $LOGNAME == root && \
-	ep=$p"\[`tput setaf 1`\]#" || \
-	p=$p"\[`tput setaf 0`\]$"
-
-maybeerr() { err=$? && test $err != 0 && echo $err\  ; }
-
-pre=$pre"\[`tput setaf 1`\]"
-mid="\[`tput setaf 7`\]"
-end="\[`tput setaf 4`\]$p \[`tput sgr0`\]"
-
-PS1=$pre"\$(maybeerr)"$mid"\[\$(title)\]\$(tpwd)"$end
-alias ls="ls -F"
+cpdf() { pdftotext "$1" - | less ; }
+yt() { youtube-dl -o - `xsel -o` | mplayer -; }
+yt2() { mplayer $(youtube-dl -g `xsel -o`); }
+upload() { curl --upload-file $1 https://transfer.sh/$1 ; }

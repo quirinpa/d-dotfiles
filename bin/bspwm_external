@@ -1,9 +1,0 @@
-#!/bin/ksh -e
-
-wid=$1
-class=$2
-instance=$3
-
-[[ $class == FLTK ]] && \
-	   [[ "`xtitle $wid`" == "Dillo Downloads" ]] && \
-	   echo state = floating

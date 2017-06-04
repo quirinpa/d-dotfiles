@@ -1,25 +1,17 @@
 #!/bin/ksh -e
-[[ -d ~/.vim ]] || mkdir ~/.vim
-
 PWD=$(cd $(dirname $0) && pwd)
-while read line
+
+ln -s $PWD/bin ~ || true
+
+ls -a | tail +3 | sed -n '/^[^.]*\..*$/p' | \
+	sed -n '/.git/!p' | while read path
 do
-	ln -fs $PWD/$line ~/$line
-done << EOF
-bin
-.inputrc
-.profile.local
-.profile
-.vimrc
-.vim/ftplugin
-.vim/colors
-.vimperatorrc
-.xsession
-.Xresources
-.config/sxhkd
-.config/bspwm
-.config/surfraw
-.screenrc
-.xdvirc
-.surf/script.js
-EOF
+	relpath=${path##$PWD/}
+	if [[ -d $relpath ]]; then
+		[[ -d ~/$relpath ]] || mkdir ~/$relpath
+		ls $relpath | while read child; do \
+			ln -s $PWD/$relpath/$child ~/$relpath || true; done
+	else
+		ln -s $PWD/$relpath ~/$relpath || true
+	fi
+done

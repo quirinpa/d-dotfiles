@@ -7,6 +7,7 @@
 ! mod4        Super_L (0x73),  Super_R (0x74),  Super_L (0x7f),  Hyper_L (0x80)
 ! mod5        Mode_switch (0x8),  ISO_Level3_Shift (0x7c)
 
+keycode 113 = Multi_key
 keycode 115 = Super_L Hyper_L
 keycode 117 = Mode_switch
 
@@ -16,10 +17,14 @@ keysym h = h H Left Begin
 keysym j = j J Down Next
 keysym k = k K Up Prior
 keysym l = l L Right End
+keysym u = u U Prior
+keysym d = d D Next
 
 !escape reality here
-! remove Lock = 66
-! clear lock
-! keycode 9 = Caps_Lock
-! keycode 66 = Escape
-! add Lock = Caps_Lock
+remove Lock = 66
+clear lock
+keycode 9 = Caps_Lock
+keycode 66 = Escape
+add Lock = Caps_Lock
+
+add mod3 = Scroll_Lock

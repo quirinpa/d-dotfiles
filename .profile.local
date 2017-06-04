@@ -1,3 +1,0 @@
-export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
-PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/6.0/packages/i386/
-PATH=$PATH:/usr/games
