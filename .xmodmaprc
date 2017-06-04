@@ -26,5 +26,3 @@ clear lock
 keycode 9 = Caps_Lock
 keycode 66 = Escape
 add Lock = Caps_Lock
-
-add mod3 = Scroll_Lock

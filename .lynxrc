@@ -97,7 +97,7 @@ case_sensitive_searching=off
 #    Ukrainian Cyrillic (cp866u)
 #    Ukrainian Cyrillic (KOI8-U)
 #    Cyrillic-Asian (PT154)
-character_set=Western (ISO-8859-1)
+character_set=UNICODE (UTF-8)
 
 # cookie_accept_domains and cookie_reject_domains are comma-delimited
 # lists of domains from which Lynx should automatically accept or reject
@@ -129,7 +129,7 @@ cookie_strict_invalid_domains=
 #   ^N = down    ^P = up
 #   ^B = left    ^F = right
 # will be enabled.
-emacs_keys=on
+emacs_keys=off
 
 # file_editor specifies the editor to be invoked when editing local files
 # or sending mail.  If no editor is specified, then file editing is disabled
@@ -313,7 +313,7 @@ sub_bookmarks=OFF
 # commands.  Set user_mode to "INTERMEDIATE" to turn off the extra info.
 # Use "ADVANCED" to see the URL of the currently selected link at the
 # bottom of the screen.
-user_mode=INTERMEDIATE
+user_mode=ADVANCED
 
 # If verbose_images is "on", lynx will print the name of the image
 # source file in place of [INLINE], [LINK] or [IMAGE]
