@@ -1,0 +1,92 @@
+#!/bin/ksh -e
+
+base_url=http://moodle.cee.uma.pt
+dest=$HOME/uma/moodle
+
+echo "MOODLE> WELCOME"
+
+echo -n USERNAME:\ 
+read username
+
+echo -n PASSWORD:\ 
+read password
+
+tmp=`mktemp /tmp/moodleXXXXXXXXX`
+
+cookie=$tmp.0
+body=$tmp.1
+head=$tmp.2
+
+quit() { rm $tmp.* || true ; }
+trap quit INT
+
+smart_curl() {
+	curl -sb $cookie -w '%{url_effective} %{content_type}' -o $body "$@" >$head
+}
+
+resource_handler() {
+	read effective_url content_type encoding <$head
+
+	case $content_type in
+		text/html*)
+			echo -n ...\ 
+			# some links go through another page
+			real_url=`cat $body | sed -n 's/.*Clique na h[^"]*"\([^"]*\).*/\1/p'`
+			smart_curl $real_url && resource_handler $@
+			;;
+		*)
+			ext=`echo ${effective_url##*.} | sed 's/?.*$//'`
+			filename="`echo $@.$ext | sed 's$/$-$g'`"
+			mv $body "$filename"
+			echo $ext GET
+	esac
+}
+
+curl -Lsc $cookie -d "username=$username&password=$password" \
+	$base_url/login/index.php | grep Turmas | sed -n 's/id=/\
+/gp' | sed -ne 's/"[^/]*\/span>/ /' -e 's/<.*//p' | \
+tail -n +2 | while read class_id class_title
+do
+	echo "$class_id $class_title"
+
+	class_pwd="$dest/$class_title"
+
+	# err... dont change please?
+	curl -sb $cookie $base_url/course/view.php?id=$class_id | \
+		tr -d "\n" | sed 's/<h3[^<]*[^>]*>\([^<]*\)/\
+\1\
+/g' | tail +2 | while read section_title
+	do
+		section_title="`echo $section_title | sed 's$/$-$g'`"
+		echo " $section_title"
+
+		section_pwd="$class_pwd/$section_title"
+		[[ -d "$section_pwd" ]] || mkdir -p "$section_pwd/.cache"
+		cd "$section_pwd"
+
+		sed 's$mod/\([a-z]*\)/view.php?id=\([0-9]*\)"><[^<]*[^>]*>\([^<]*\)$\
+LINK \1 \2 \3\
+$g' | sed -n 's/LINK //p' | while read link_type link_id link_title
+		do
+			echo -n "  $link_type $link_id \"$link_title\" "
+
+			if [[ -e ".cache/$link_id" ]]; then
+				echo SKIP
+			else
+				type ${link_type}_handler | grep function >/dev/null && \
+					smart_curl -L --post303 \
+					$base_url/mod/$link_type/view.php?id=$link_id && \
+					${link_type}_handler $link_title && touch ".cache/$link_id" || \
+					echo ERROR
+			fi
+
+		done
+		cd -
+
+		# if no files were obtained, remove dir
+		rmdir "$section_pwd/.cache" 2>/dev/null && rmdir "$section_pwd" || true
+	done
+
+done
+
+quit
