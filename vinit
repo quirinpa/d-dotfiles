@@ -16,7 +16,7 @@ while read -r line; do
 	if [[ -e $target ]]; then
 		git -C $target pull
 	else
-		git -C $bundle clone git://github.com/$line
+		git -C $bundle clone https://github.com/$line
 	fi
 done << EOF
 tpope/vim-unimpaired
@@ -24,10 +24,11 @@ tpope/vim-surround
 tpope/vim-fugitive
 tpope/vim-commentary
 tpope/vim-vinegar
-tpope/vim-dispatch
-kana/vim-fakeclip
-vim-scripts/indentpython.vim
+sjl/gundo.vim
 EOF
+
+# python 2.4+
+# sjl/gundo.vim
 
 echo -n "proceeding will delete all other bundles (y/*) "
 read -r y

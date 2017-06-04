@@ -35,13 +35,13 @@ hi SpellCap ctermfg=2 cterm=bold
 hi SpellRare ctermfg=3 cterm=bold
 hi SpellLocal ctermfg=5 cterm=bold
 
-hi LineNr ctermfg=0 cterm=bold
+hi LineNr ctermfg=7
 hi CursorLineNr ctermfg=3 cterm=bold
-hi CursorLine ctermbg=0 cterm=NONE
+hi CursorLine ctermbg=0
 
 hi Visual ctermbg=6 cterm=NONE
 
-hi NonText ctermfg=0 cterm=bold
+hi NonText ctermfg=7
 hi Directory ctermfg=4 cterm=bold
 hi Title ctermfg=3 cterm=bold
 hi ErrorMsg ctermfg=7 ctermbg=1 cterm=bold
@@ -57,7 +57,7 @@ hi User6 ctermfg=7 ctermbg=6 cterm=bold
 hi User7 ctermfg=7 ctermbg=4 cterm=bold
 hi User8 ctermfg=7 ctermbg=3 cterm=bold
 hi User9 ctermfg=7 ctermbg=0 cterm=bold
-hi Folded ctermfg=0 ctermbg=none cterm=bold
+hi Folded ctermfg=7 ctermbg=none
 hi! link SignColumn LineNr
 hi! link FoldColumn SignColumn
 hi! link WarningMsg ErrorMsg
