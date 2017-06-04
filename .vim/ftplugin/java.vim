@@ -1,1 +1,1 @@
-set makeprg=ant\ -emacs
+" set makeprg=ant\ -emacs

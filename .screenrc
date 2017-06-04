@@ -1,3 +1,5 @@
-term screen-256color
-startup_message off
+escape ^Jj
 shell -$SHELL
+startup_message off
+termcapinfo xterm* ti@:te@
+altscreen on

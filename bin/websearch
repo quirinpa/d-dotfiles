@@ -1,3 +1,0 @@
-#!/bin/ksh -e
-search=$(echo|dmenu -p "www/")
-[[ $? == 0 ]] && BROWSER=surf sr -graphical duckduckgo $search

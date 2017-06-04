@@ -1,0 +1,29 @@
+! shift       Shift_L (0x32),  Shift_R (0x3e)
+! lock        Caps_Lock (0x42)
+! control     Control_L (0x25),  Control_R (0x6d)
+! mod1        Alt_L (0x40),  Mode_switch (0x71),  Meta_L (0x9c)
+! mod2        Num_Lock (0x4d)
+! mod3      	Caps
+! mod4        Super_L (0x73),  Super_R (0x74),  Super_L (0x7f),  Hyper_L (0x80)
+! mod5        Mode_switch (0x8),  ISO_Level3_Shift (0x7c)
+
+keycode 113 = Multi_key
+keycode 115 = Super_L Hyper_L
+keycode 117 = Mode_switch
+
+keysym i = i I Insert
+keysym h = h H Left Begin
+keysym j = j J Down Next
+keysym k = k K Up Prior
+keysym l = l L Right End
+keysym u = u U Prior
+keysym d = d D Next
+
+!escape reality here
+remove Lock = 66
+clear lock
+keycode 9 = Caps_Lock
+keycode 66 = Escape
+add Lock = Caps_Lock
+
+add mod3 = Scroll_Lock
