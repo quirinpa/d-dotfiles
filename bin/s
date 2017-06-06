@@ -1,0 +1,52 @@
+#!/bin/ksh -e
+
+tmp=`mktemp /tmp/searxXXXXXXXX`
+
+trap "rm $tmp" INT
+
+[[ -z "$@" ]] && { \
+	printf "q: " >&2 ; \
+	read q ; \
+} || q="$@"
+
+p=1
+
+menu() {
+	{
+		echo "<ol>"
+		curl -s --data-urlencode "q=$q" -d "pageno=$p"\
+			-d "format=rss" "https://search.datensturm.net" | \
+			grep -e "<title" -e "<link" -e "<desc" | tail +4 | \
+			sed 's/[ \t]*<[^>]*>//;s/<.*//' | while read title
+		do
+			read link ; read desc
+			echo "<li><h3>$title</h3><p>$link<br/>$desc</p></li>"
+			echo $link >>$tmp
+		done
+		echo "</ol>"
+	} | lynx -dump -stdin -prettysrc | more -e
+
+	printf "choice: " >&2
+	read c
+
+	case $c in
+		n*)
+			p=$((p + 1))
+			menu
+			;;
+		p*)
+			p=$((p - 1))
+			menu
+			;;
+		q*)
+			rm $tmp
+			exit 1
+			;;
+	esac
+}
+
+menu
+url=`sed "${c}p;d" $tmp`
+rm $tmp
+
+$BROWSER $url

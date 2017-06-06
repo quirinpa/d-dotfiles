@@ -5,14 +5,10 @@ export PANEL_FIFO=/tmp/bar
 export GBROWSER=browser
 export MAIL MAILCHECK
 
-xrdb -load .Xresources
 xidle -timeout 300 -program "/usr/local/bin/xlock" &
 
 xmodmap $HOME/.xmodmaprc
 keynav &
-
-[[ ! -e ~/.xsession.local ]] || \
-	. ~/.xsession.local
 
 # xbiff -geometry +5-5 &
 # xclock -geometry +60-12 &

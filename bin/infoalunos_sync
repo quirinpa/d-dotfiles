@@ -1,0 +1,50 @@
+#!/bin/ksh
+url=https://infoalunos.uma.pt
+dest=$HOME/uma/infoalunos
+cookie=`mktemp /tmp/cookiejarXXXXXXX`
+curl -sLc $cookie $url/modulos/entrada/infoalunos_form_login.php >/dev/null
+getid() { tail -1 $cookie | awk '{print $7}' ; }
+
+IdPeriodoAnoLectivo=330
+
+echo "INFOALUNOS> WELCOME. PLEASE WAIT..."
+curl -sLb $cookie -c $cookie -F "PHPSESSID=`getid`" \
+	-F "vs_chave1_hidden=2014215" -F "vs_chave2_hidden=g5h7HM9a3H" \
+	$url/modulos/entrada/infoalunos_login.php >/dev/null
+
+[[ -d $dest ]] || mkdir -p $dest ; cd $dest
+while read id classname
+do
+	echo "o===<|---------> $classname"
+	cdest="$dest/$classname"
+	[[ -e "$cdest/.cache" ]] || mkdir -p "$cdest/.cache"
+	cd "$cdest"
+	curl -sb $cookie \
+		-d "IdPeriodoAnoLectivo=330" -d "IdEdicaoCadeira=$id" \
+		-d "NV_MOD=MODDISCIPLINA" -d "NV_EAGR=EAGR_DISCFICHEIROS" \
+		-d "TPESQ=FRM_LST_DISCIPLINA" \
+		$url/modulos/disciplina/index.php | \
+		sed -n "s&FileID=\([^\"]*\)\" target=\"_blank\">\([^\<]*\)&\\
+_LINK_ \1 \2\\
+&gp" | sed -n 's/_LINK_ //p' | while read fid title
+do
+	if [[ -e ".cache/$title" ]]; then
+		echo SKIP $title
+	else
+		echo FETCH $title...
+		curl -#JOb $cookie $url/modulos/download/?FileID=$fid || true
+		touch ".cache/$title"
+	fi
+done
+	cd -
+done <<EOF
+11885 Mecânica e Ondas
+11887 Ciências Experimentais
+11868 Ferramentas Analíticas para Engenheiros
+12261 Formação Científica, Cultural, Social e Ética 1 (Introdução às Ciências Empresariais)
+12584 Introdução à Eletrónica
+11866 Lógica Computacional
+11878 Probabilidades e Estatística
+12023 Programação Orientada por Objectos
+11865 Teoria e Fundamentos da Computação
+EOF
