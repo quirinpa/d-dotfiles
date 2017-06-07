@@ -1,0 +1,5 @@
+alias term exec st -e screen
+
+bind c term
+bind g colon term s 
+bind B exec dillo

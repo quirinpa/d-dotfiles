@@ -1,0 +1,9 @@
+* {
+	background: #000000 ! important;
+	color: #b6b6b6 ! important;
+	border-color: #16161b ! important;
+}
+
+a { color: #69ffbb !important; }
+:link { color: #733bee !important; }
+:visited { color: #ee3c84 ! important; }

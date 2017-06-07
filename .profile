@@ -4,11 +4,15 @@ export PATH=$PATH:~/.local/bin:~/bin:/usr/games:/usr/local/jdk-1.8.0/bin
 # export VISUAL=vim
 # export EDITOR=ed
 export BROWSER=lynx
+export LC_CTYPE=en_US.UTF-8
 
 HISTFILE=~/.history
 
 set -o emacs
 echo $LOGNAME@`hostname`
+
+[[ ! -s /var/mail/$LOGNAME ]] || echo You have mail!
+
 red="\033[31m"
 bold="\033[1m"
 reset="\033[0m"
@@ -16,8 +20,6 @@ reset="\033[0m"
 maybeerr() { err=$? && test $err != 0 && echo \\[$red\\]$err\  ; }
 
 PS1="\$(maybeerr)\[$bold\]\$ \[$reset\]"
-
-export LC_CTYPE=en_US.UTF-8
 
 cpdf() { pdftotext "$1" - | less ; }
 yt() { youtube-dl -o - `xsel -o` | mplayer -; }

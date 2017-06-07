@@ -1,0 +1,13 @@
+#include "/etc/X11/Xresources"
+
+xterm*loginShell: true
+xterm*boldFont: DefaultFont
+
+xterm*boldMode: false
+xterm*colorBDMode: true
+
+XTerm*metaSendsEscape: true
+XTerm*eightBitInput: false
+
+xterm*locale: true
+xterm*utf8: 1

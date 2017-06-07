@@ -4,10 +4,12 @@ tmp=`mktemp /tmp/searxXXXXXXXX`
 
 trap "rm $tmp" INT
 
-[[ -z "$@" ]] && { \
+ask_query() {
 	printf "q: " >&2 ; \
 	read q ; \
-} || q="$@"
+}
+
+[[ -z "$@" ]] && ask_query || q="$@"
 
 p=1
 
@@ -41,6 +43,11 @@ menu() {
 		q*)
 			rm $tmp
 			exit 1
+			;;
+		s*)
+			ask_query
+			p=1
+			menu
 			;;
 	esac
 }

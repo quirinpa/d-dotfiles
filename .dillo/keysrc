@@ -1,0 +1,14 @@
+t = new-tab
+d = close-tab
+K = left-tab
+J = right-tab
+H = back
+L = forward
+r = reload
+/ = find
+k = line-up
+j = line-down
+h = left
+l = right
+g = top
+G = bottom

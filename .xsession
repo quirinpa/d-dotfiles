@@ -1,10 +1,10 @@
 #!/bin/ksh -e
 
+export LC_CTYPE=en_US.UTF-8
+export BROWSER=dillo
 PATH=$HOME/bin:$PATH
-export PANEL_FIFO=/tmp/bar
-export GBROWSER=browser
-export MAIL MAILCHECK
 
+xrdb -load ~/.Xresources
 xidle -timeout 300 -program "/usr/local/bin/xlock" &
 
 xmodmap $HOME/.xmodmaprc
@@ -18,4 +18,5 @@ keynav &
 
 # exec cwm
 
-exec wmii
+# exec wmii
+exec ratpoison

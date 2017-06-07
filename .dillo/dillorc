@@ -1,0 +1,54 @@
+search_url="s search.datensturm.net (https) https://search.datensturm.net/?q=%s"
+search_url="sc Searx.ch (https) https://searx.ch/?q=%s"
+search_url="dd DuckDuckGo (https) https://duckduckgo.com/lite/?&q=%s"
+search_url="gg Google http://www.google.com/search?ie=UTF-8&oe=UTF-8&q=%s"
+search_url="wk Wikipedia http://www.wikipedia.org/w/index.php?search=%s&go=Go"
+search_url="fd Free Dictionary http://www.thefreedictionary.com/%s"
+search_url="sp Startpage (https) https://www.startpage.com/do/search?query=%s"
+
+start_page="dpi:/bm/"
+# http_proxy="http://50.16.130.96"
+
+# allow_white_bg=NO
+contrast_visited_color=YES
+
+# theme = none (default) plastic or gtk+
+limit_text_width=YES
+w3c_plus_heuristics=YES
+how_extra_warnings=YES
+
+load_stylesheets=NO
+# white_bg_replacement=#666666
+bg_color=#16161b
+ui_fg_color=#b6b6b6
+ui_main_bg_color=#16161b
+ui_text_bg_color=#000000
+ui_selection_color=#733bee
+ui_tab_active_bg_color=#733bee
+ui_tab_active_fg_color=#000000
+ui_tab_bg_color=#000000
+ui_button_highlight_color=#733bee
+
+panel_size=tiny
+small_icons=YES
+fullwindow_start=YES
+show_quit_dialog=NO
+
+show_back=NO
+show_forw=NO
+show_home=NO
+show_reload=NO
+show_save=NO
+show_stop=NO
+show_bookmarks=NO
+show_tools=NO
+show_filemenu=NO
+show_clear_url=NO
+# show_url=YES
+show_search=NO
+# show_help=YES
+# show_progress_box=YES
+
+http_referer=host
+enterpress_forces_submit=YES
+right_click_closes_tab=YES

@@ -1,0 +1,34 @@
+:s0: Unclassified
+s0 https://torrentz2.cc Torrentz Search Engine
+s0 http://knaben.org/s/keepgoing.php?url=browse Knaben Database - The Pirate Bay
+s0 http://suckless.org suckless.org software that sucks less
+s0 uj3wazyk5u4hnvtk.onion pirate bay
+s0 http://moodle.cee.uma.pt/ Moodle FCEE
+s0 https://www.openbsd.org/ OpenBSD
+s0 https://linux.die.net/man/1/mailx mailx(1): send/receive Internet mail - Linux man page
+s0 https://transfer.sh/ transfer.sh - Easy and fast file sharing from the command-line.
+s0 https://www.youtube.com/user/MinuteVimTricks MinuteVimTricks - YouTube
+s0 https://somafm.com/defcon130.pls https://somafm.com/defcon130.pls
+s0 https://www.anirena.com/?s=%5BAnimeRG%5D AniRena • Torrent List
+s0 http://www.noobz.com.br/search/label/Anime Noobz : Anime
+s0 http://talk.maemo.org/showthread.php?t=87959 Maemo5 boot process - maemo.org - Talk
+s0 http://elinux.org/N900 N900 - eLinux.org
+s0 http://gentoo-overlays.zugaina.org/ Ycarus Gentoo ebuild - Other ebuilds
+s0 https://ossguy.com/?p=475 How to install GCC on the Nokia N900 « A better world
+s0 http://undeadly.org/cgi?action=article&sid=20090903183235 Tunnelling out of corporate networks (Part 1)
+s0 http://journal.reallyenglish.com/openbsd/ RubberEgg: OpenBSD Archives
+s0 http://www.fladnag.net/downloads/telephone/n900/ tablets-dev.nokia.com restricted downloads
+s0 http://linux-sunxi.org/Toolchain Toolchain - linux-sunxi.org
+s0 http://wiki.maemo.org/Repartitioning_the_flash Repartitioning the flash - maemo.org wiki
+s0 https://hackaday.com/tag/n900/ N900 | Hackaday
+s0 http://blueprintdiagram.blogspot.pt/2015/09/free-nokia-n900-parts-schematic-diagram.html Free Nokia N900 Parts Schematic Diagram Good Quality Wallpaper - free wiring diagram
+s0 https://www.freebsd.org/doc/en/books/pmake/ PMake — A Tutorial
+s0 https://www.freebsd.org/doc/en/books/pmake/writeanddebug.html 2.6. Writing and Debugging a Makefile
+s0 http://terminalsare.sexy Terminals Are Sexy
+s0 https://kkovacs.eu/cool-but-obscure-unix-tools Cool, but obscure unix tools :: Software architect Kristof Kovacs
+s0 https://www.cyberciti.biz/open-source/best-terminal-applications-for-linux-unix-macosx/ 15 Greatest Open Source Terminal Applications Of 2012 – nixCraft
+s0 http://puffysecurity.com/wiki/opensmtpd.html Puffy Security
+s0 https://www.ptudor.net/starttls/openbsd-opensmtpd/ STARTTLS Makes The Internet Better
+s0 http://technoquarter.blogspot.pt/p/series.html technoquarter: Series
+s0 http://www.linuxjournal.com/content/parsing-rss-news-feed-bash-script Parsing an RSS News Feed with a Bash Script | Linux Journal
+s0 about:splash Splash screen for dillo-3.0.5
