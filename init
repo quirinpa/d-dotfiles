@@ -10,8 +10,10 @@ do
 	if [[ -d $relpath ]]; then
 		[[ -d ~/$relpath ]] || mkdir ~/$relpath
 		ls $relpath | while read child; do \
-			ln -s $PWD/$relpath/$child ~/$relpath || true; done
+			ln -s $PWD/$relpath/$child ~/$relpath || \
+			diff $PWD/$relpath/$child ~/$relpath/$child; done
 	else
-		ln -s $PWD/$relpath ~/$relpath || true
+		ln -s $PWD/$relpath ~/$relpath || \
+			diff $PWD/$relpath ~/$relpath
 	fi
 done

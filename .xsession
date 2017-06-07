@@ -7,6 +7,7 @@ PATH=$HOME/bin:$PATH
 xrdb -load ~/.Xresources
 xidle -timeout 300 -program "/usr/local/bin/xlock" &
 
+toggle_touchpad
 xmodmap $HOME/.xmodmaprc
 keynav &
 
@@ -19,4 +20,5 @@ keynav &
 # exec cwm
 
 # exec wmii
+# exec dwm
 exec ratpoison
