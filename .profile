@@ -25,3 +25,5 @@ cpdf() { pdftotext "$1" - | less ; }
 yt() { youtube-dl -o - `xsel -o` | mplayer -; }
 yt2() { mplayer $(youtube-dl -g `xsel -o`); }
 upload() { curl --upload-file $1 https://transfer.sh/$1 ; }
+
+alias ls="ls -F"

@@ -1,59 +1,78 @@
 #!/bin/ksh -e
 
-tmp=`mktemp /tmp/searxXXXXXXXX`
+curlit() {
+	curl -s --data-urlencode "q=$q" -d "pageno=$p" \
+		-d "format=rss" "https://search.datensturm.net"
+}
 
-trap "rm $tmp" INT
+sedit() {
+	sed 's/[ \t]*<[^>]*>//;s/<.*//'
+}
+
+if [[ "$1" == "-l" ]]; then
+	shift
+	lucky=true
+else
+	lucky=false
+fi
+
 
 ask_query() {
-	printf "q: " >&2 ; \
-	read q ; \
+	printf "q: " >&2
+	read q
 }
 
 [[ -z "$@" ]] && ask_query || q="$@"
-
 p=1
 
-menu() {
-	{
-		echo "<ol>"
-		curl -s --data-urlencode "q=$q" -d "pageno=$p"\
-			-d "format=rss" "https://search.datensturm.net" | \
-			grep -e "<title" -e "<link" -e "<desc" | tail +4 | \
-			sed 's/[ \t]*<[^>]*>//;s/<.*//' | while read title
-		do
-			read link ; read desc
-			echo "<li><h3>$title</h3><p>$link<br/>$desc</p></li>"
-			echo $link >>$tmp
-		done
-		echo "</ol>"
-	} | lynx -dump -stdin -prettysrc | more -e
+if $lucky; then
+	url=`curlit | grep -e "<link" | tail +2 | head -1 | sedit`
+else
+	tmp=`mktemp /tmp/searxXXXXXXXX`
+	trap "rm $tmp" INT
 
-	printf "choice: " >&2
-	read c
+	menu() {
+		{
+			echo "<ol>"
+			curl -s --data-urlencode "q=$q" -d "pageno=$p"\
+				-d "format=rss" "https://search.datensturm.net" | \
+				grep -e "<title" -e "<link" -e "<desc" | tail +4 | \
+				sed 's/[ \t]*<[^>]*>//;s/<.*//' | while read title
+			do
+				read link ; read desc
+				echo "<li><h3>$title</h3><p>$link<br/>$desc</p></li>"
+				echo $link >>$tmp
+			done
+			echo "</ol>"
+		} | lynx -dump -stdin -prettysrc | more -e
 
-	case $c in
-		n*)
-			p=$((p + 1))
-			menu
-			;;
-		p*)
-			p=$((p - 1))
-			menu
-			;;
-		q*)
-			rm $tmp
-			exit 1
-			;;
-		s*)
-			ask_query
-			p=1
-			menu
-			;;
-	esac
-}
+		printf "choice: " >&2
+		read c
 
-menu
-url=`sed "${c}p;d" $tmp`
-rm $tmp
+		case $c in
+			n*)
+				p=$((p + 1))
+				menu
+				;;
+			p*)
+				p=$((p - 1))
+				menu
+				;;
+			q*)
+				rm $tmp
+				exit 1
+				;;
+			s*)
+				ask_query
+				p=1
+				menu
+				;;
+		esac
+	}
+
+	menu
+	url=`sed "${c}p;d" $tmp`
+	rm $tmp
+fi
 
 $BROWSER $url
