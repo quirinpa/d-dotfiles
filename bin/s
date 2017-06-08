@@ -16,7 +16,6 @@ else
 	lucky=false
 fi
 
-
 ask_query() {
 	printf "q: " >&2
 	read q
@@ -26,37 +25,34 @@ ask_query() {
 p=1
 
 if $lucky; then
-	url=`curlit | grep -e "<link" | tail +2 | head -1 | sedit`
+	$BROWSE `curlit | grep -e "<link" | tail +2 | head -1 | sedit`
 else
 	tmp=`mktemp /tmp/searxXXXXXXXX`
 	trap "rm $tmp" INT
 
-	menu() {
-		{
-			echo "<ol>"
-			curl -s --data-urlencode "q=$q" -d "pageno=$p"\
-				-d "format=rss" "https://search.datensturm.net" | \
-				grep -e "<title" -e "<link" -e "<desc" | tail +4 | \
-				sed 's/[ \t]*<[^>]*>//;s/<.*//' | while read title
-			do
-				read link ; read desc
-				echo "<li><h3>$title</h3><p>$link<br/>$desc</p></li>"
-				echo $link >>$tmp
-			done
-			echo "</ol>"
-		} | lynx -dump -stdin -prettysrc | more -e
+	omenu() {
+		# echo "<ol>"
+		curl -s --data-urlencode "q=$q" -d "pageno=$p"\
+			-d "format=rss" "https://search.datensturm.net" | \
+			grep -e "<title" -e "<link" -e "<desc" | tail +4 | \
+			sed 's/[ \t]*<[^>]*>//;s/<.*//' | while read title
+		do
+			read link ; read desc
+			echo $link >>$tmp
+			echo $title
+			echo $desc
+		done | menu
 
-		printf "choice: " >&2
 		read c
 
 		case $c in
 			n*)
 				p=$((p + 1))
-				menu
+				omenu
 				;;
 			p*)
 				p=$((p - 1))
-				menu
+				omenu
 				;;
 			q*)
 				rm $tmp
@@ -65,14 +61,14 @@ else
 			s*)
 				ask_query
 				p=1
-				menu
+				omenu
 				;;
+			*)
+				$BROWSER `sed "${c}p;d" $tmp`
+				rm $tmp
+				exit 0
 		esac
 	}
 
-	menu
-	url=`sed "${c}p;d" $tmp`
-	rm $tmp
+	omenu
 fi
-
-$BROWSER $url

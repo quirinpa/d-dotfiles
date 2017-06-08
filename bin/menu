@@ -1,0 +1,10 @@
+#!/bin/ksh -e
+while read title
+do
+	read description
+	i=$((i+1))
+	printf "$i) %s\n" "$title"
+	printf "%s\n\n" "$description"
+done | more -e >&2
+
+printf "choice: " >&2

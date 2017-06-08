@@ -1,10 +1,11 @@
-export PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/6.0/packages/i386/
-export PATH=$PATH:~/.local/bin:~/bin:/usr/games:/usr/local/jdk-1.8.0/bin
+PKG_PATH=ftp://mirror.exonetric.net/pub/OpenBSD/`uname -r`/packages/`uname -m`/
+PATH=$PATH:~/.local/bin:~/bin:/usr/games:/usr/local/jdk-1.8.0/bin
 
-# export VISUAL=vim
-# export EDITOR=ed
-export BROWSER=lynx
-export LC_CTYPE=en_US.UTF-8
+# VISUAL=vim
+# EDITOR=ed
+BROWSER=lynx
+LC_CTYPE=en_US.UTF-8
+export PKG_PATH PATH BROWSER
 
 HISTFILE=~/.history
 
