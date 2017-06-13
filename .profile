@@ -5,14 +5,19 @@ PATH=$PATH:~/.local/bin:~/bin:/usr/games:/usr/local/jdk-1.8.0/bin
 # EDITOR=ed
 BROWSER=lynx
 LC_CTYPE=en_US.UTF-8
-export PKG_PATH PATH BROWSER
+export PKG_PATH PATH BROWSER LC_CTYPE
 
 HISTFILE=~/.history
 
 set -o emacs
 echo $LOGNAME@`hostname`
 
-[[ ! -s /var/mail/$LOGNAME ]] || echo You have mail!
+MAIL=/var/mail/$LOGNAME
+MAILCHECK=600
+[[ ! -s $MAIL ]] || [[ `tty` == /dev/ttyC* ]] || echo -e "\aYou have new mail!"
+biff y
+
+screen -ls | grep Detached | sed 's/^	\([^	]*\).*$/\1/'
 
 red="\033[31m"
 bold="\033[1m"

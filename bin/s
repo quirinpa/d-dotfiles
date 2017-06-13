@@ -1,13 +1,6 @@
 #!/bin/ksh -e
 
-curlit() {
-	curl -s --data-urlencode "q=$q" -d "pageno=$p" \
-		-d "format=rss" "https://search.datensturm.net"
-}
-
-sedit() {
-	sed 's/[ \t]*<[^>]*>//;s/<.*//'
-}
+MENU=${MENU:-menu}
 
 if [[ "$1" == "-l" ]]; then
 	shift
@@ -24,50 +17,57 @@ ask_query() {
 [[ -z "$@" ]] && ask_query || q="$@"
 p=1
 
+curlit() {
+	curl -s --data-urlencode "q=$q" -d "pageno=$p" -d "format=rss" \
+		"https://search.datensturm.net" | tr -d "\n" | tr "<" "\n" | tail +2
+}
+
+parse_tags() {
+	IFS=">" read tag val
+	[[ ! -z $tag ]]
+}
+
 if $lucky; then
-	$BROWSE `curlit | grep -e "<link" | tail +2 | head -1 | sedit`
+	curlit | while parse_tags
+	do
+		if [[ $tag == link* ]]; then
+			exec $BROWSER $val
+			exit 0
+		fi
+	done
 else
-	tmp=`mktemp /tmp/searxXXXXXXXX`
-	trap "rm $tmp" INT
-
 	omenu() {
-		# echo "<ol>"
-		curl -s --data-urlencode "q=$q" -d "pageno=$p"\
-			-d "format=rss" "https://search.datensturm.net" | \
-			grep -e "<title" -e "<link" -e "<desc" | tail +4 | \
-			sed 's/[ \t]*<[^>]*>//;s/<.*//' | while read title
-		do
-			read link ; read desc
-			echo $link >>$tmp
-			echo $title
-			echo $desc
-		done | menu
+		ignore=true
+		title=
+		{
+			[[ $p == 1 ]] || echo previous
+			echo next
 
-		read c
-
-		case $c in
-			n*)
-				p=$((p + 1))
-				omenu
-				;;
-			p*)
-				p=$((p - 1))
-				omenu
-				;;
-			q*)
-				rm $tmp
-				exit 1
-				;;
-			s*)
-				ask_query
-				p=1
-				omenu
-				;;
-			*)
-				$BROWSER `sed "${c}p;d" $tmp`
-				rm $tmp
-				exit 0
-		esac
+			curlit | while parse_tags
+			do
+				if $ignore; then
+					[[ $tag != descr* ]] || ignore=false
+				else
+					case $tag in
+						link*) echo -n $val\  ;;
+						title*) title=$val ;;
+						descr*) echo \[$title\] $val ;;
+					esac
+				fi
+			done
+		} | $MENU | {
+			IFS=' ' read c
+			case $c in
+				next*) p=$((p + 1)); omenu ;;
+				previous*) p=$((p - 1)); omenu ;;
+				http*)
+					set -- $c
+					exec $BROWSER $1
+					exit 0
+					;;
+				*) exit 1
+			esac
+		}
 	}
 
 	omenu

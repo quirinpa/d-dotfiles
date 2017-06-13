@@ -1,7 +1,7 @@
 " set smarttab hidden
 " set mouse=a
 set list wildignore+=*.o,*.class title tags=./tags cursorline wildmenu
-set ts=2 sw=2 path+=** lazyredraw rnu "textwidth=80
+set ts=2 sw=2 path+=** lazyredraw rnu nu "textwidth=80
 
 execute pathogen#infect()
 syntax on
@@ -11,7 +11,7 @@ hi OverLength ctermbg=1 ctermfg=white
 match OverLength /\%81v.\+/
 
 " Accessible options
-nmap <leader>on :let [&nu, &rnu] = [!&rnu, &nu+&rnu==1]<cr>
+nmap <leader>on :setl rnu! nu!<cr>
 nmap <leader>ol :setl <c-r>=&list ? "nolist" : "list"<cr><cr>
 nmap <leader>os :setl <c-r>=&spell ? "nospell" : "spell"<cr><cr>
 

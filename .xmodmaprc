@@ -8,7 +8,7 @@
 ! mod5        Mode_switch (0x8),  ISO_Level3_Shift (0x7c)
 
 keycode 113 = Multi_key
-keycode 115 = Super_L Hyper_L
+keycode 113 = Mode_switch
 keycode 117 = Mode_switch
 
 keysym m = m M Multi_key

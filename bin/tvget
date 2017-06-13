@@ -1,0 +1,52 @@
+#!/bin/ksh -e
+
+transmission-remote -l >/dev/null || transmission-daemon
+
+cache=~/.cache/tv
+[[ -f $cache ]] || touch $cache
+
+quiet=true
+
+parse_in() {
+	IFS=">" read tag val
+	[[ ! -z $tag ]]
+}
+
+get_magnets() {
+	curl -s $1 | sed 's/</\
+/g' | tail +2 | while parse_in
+	do
+		case $tag in
+			title*)
+				title=`echo $val | egrep "$2" || true`
+				! fgrep "$title" $cache >/dev/null || title=
+				;;
+			link*)
+				if [[ ! -z $title ]]; then
+					transmission-remote -a "$val" >/dev/null
+					echo $title
+					$quiet || printf "%s\n%s\n\n" "$title" "$val" >&2
+					title=
+				fi
+				;;
+		esac
+	done
+}
+
+{
+	get_magnets "http://horriblesubs.info/rss.php?res=720" \
+		"Berserk|Dragon Ball Super|Shingeki no Kyojin|Nanatsu no Taizai"
+
+	while read url
+	do
+		get_magnets $url '720p'
+	done<<!
+http://showrss.info/show/810.rss
+http://showrss.info/show/54.rss
+http://showrss.info/show/275.rss
+http://showrss.info/show/144.rss
+http://showrss.info/show/115.rss
+http://showrss.info/show/71.rss
+http://showrss.info/show/453.rss
+!
+} | tee -a $cache | mail -Es "new episodes" $LOGNAME

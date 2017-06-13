@@ -1,10 +1,29 @@
 #!/bin/ksh -e
-while read title
+tmp=`mktemp /tmp/searxXXXXXXXX`
+trap "rm $tmp; exit 1" INT
+
+tee $tmp | while read line
 do
-	read description
-	i=$((i+1))
-	printf "$i) %s\n" "$title"
-	printf "%s\n\n" "$description"
+	printf "%s\n\n" "$line"
 done | more -e >&2
 
+exec 0</dev/tty
 printf "choice: " >&2
+read answer
+
+if ! grep $answer $tmp ; then
+	echo $answer
+	exit 2
+fi
+
+rm $tmp
+
+# while read title
+# do
+# 	read description
+# 	i=$((i+1))
+# 	printf "$i) %s\n" "$title"
+# 	printf "%s\n\n" "$description"
+# done | more -e >&2
+
+# printf "choice: " >&2
