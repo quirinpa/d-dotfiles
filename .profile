@@ -9,6 +9,7 @@ export PKG_PATH PATH BROWSER LC_CTYPE
 
 HISTFILE=~/.history
 
+#set -o vi
 set -o emacs
 echo $LOGNAME@`hostname`
 
@@ -27,6 +28,7 @@ maybeerr() { err=$? && test $err != 0 && echo \\[$red\\]$err\  ; }
 
 PS1="\$(maybeerr)\[$bold\]\$ \[$reset\]"
 
+alias o="xdg-open"
 cpdf() { pdftotext "$1" - | less ; }
 yt() { youtube-dl -o - `xsel -o` | mplayer -; }
 yt2() { mplayer $(youtube-dl -g `xsel -o`); }

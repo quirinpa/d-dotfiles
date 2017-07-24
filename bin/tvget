@@ -13,6 +13,7 @@ parse_in() {
 }
 
 get_magnets() {
+	echo $@ >&2
 	curl -s $1 | sed 's/</\
 /g' | tail +2 | while parse_in
 	do
@@ -35,18 +36,10 @@ get_magnets() {
 
 {
 	get_magnets "http://horriblesubs.info/rss.php?res=720" \
-		"Berserk|Dragon Ball Super|Shingeki no Kyojin|Nanatsu no Taizai"
+		"`cat ~/.horriblesubs | tr '\n' '|' | sed '$ s/.$//'`"
 
-	while read url
+	cat ~/.showrss | while read url
 	do
 		get_magnets $url '720p'
-	done<<!
-http://showrss.info/show/810.rss
-http://showrss.info/show/54.rss
-http://showrss.info/show/275.rss
-http://showrss.info/show/144.rss
-http://showrss.info/show/115.rss
-http://showrss.info/show/71.rss
-http://showrss.info/show/453.rss
-!
+	done
 } | tee -a $cache | mail -Es "new episodes" $LOGNAME

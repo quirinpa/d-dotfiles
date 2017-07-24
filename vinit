@@ -21,6 +21,7 @@ while read -r line; do
 done << EOF
 tpope/vim-unimpaired
 tpope/vim-surround
+tpope/vim-repeat
 tpope/vim-fugitive
 tpope/vim-commentary
 tpope/vim-vinegar

@@ -1,2 +1,2 @@
 #!/bin/ksh
-mpack -s "" -c "application/pdf" $1 698adwu822eja@hpeprint.com
+mpack -s "" -c "application/pdf" "$1" 698adwu822eja@hpeprint.com

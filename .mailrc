@@ -4,5 +4,5 @@ alias mom mjcazevedo@hotmail.com
 ignore Date Delivered-To To X-Google-DKIM-Signature X-Gm-Message-State \
 				 X-Received X-Forwarded-For X-Forwarded-To ARC-Seal \
 				 ARC-Message-Signature ARC-Authentication-Results Received-SPF \
-				 DKIM-Signature X-Google-Original-From Authentication-Results \
+				 X-Google-Original-From Authentication-Results \
 				 X-Original-Authentication-Results
