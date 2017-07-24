@@ -9,6 +9,17 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
+" ReadSkeleton {{{
+function! ReadSkeleton(type)
+	let l:file = $HOME . "/.vim/skeleton/" . a:type
+	if (empty(glob(l:file)))
+		echo "No skeleton!"
+	else
+		execute '-1read ' . fnameescape(l:file)
+	endif
+endfunction
+command! -nargs=1 SkeletonLoad call ReadSkeleton(<q-args>)
+"}}}
 " OverLength {{{
 hi OverLength ctermbg=1 ctermfg=white
 match OverLength /\%81v.\+/
@@ -37,13 +48,13 @@ endfunction
 autocmd QuickfixCmdPost make call AfterMakeC()
 "}}}
 "Insert-mode maps {{{
-imap <C-E> <esc>A
+ino <C-E> <esc>A
 " Auto-Close {{{
-imap <buffer> " ""<left>
-imap <buffer> ' ''<left>
-imap <buffer> ( ()<left>
-imap <buffer> [ []<left>
-imap <buffer> { {<cr>}<up><end><cr>
+ino <buffer> " ""<left>
+ino <buffer> ' ''<left>
+ino <buffer> ( ()<left>
+ino <buffer> [ []<left>
+ino <buffer> { {}<left>
 "}}}
 "}}}
 " Normal-mode maps {{{
@@ -55,6 +66,7 @@ nmap <leader>os :setl <c-r>=&spell ? "nospell" : "spell"<cr><cr>
 nmap <leader>x :x<cr>
 nmap <leader>w :w<cr>:echo "saved"<cr>
 nmap <leader>s :so %<cr>:echo "sourced"<cr>
+nmap <leader>sk :SkeletonLoad<space>
 nmap <leader>r :w<cr>:!. %<cr>
 nmap <leader>b :ls<cr>:b
 

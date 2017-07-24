@@ -3,7 +3,7 @@
 
 ln -fs $PWD/.vimrc $PWD/.profile $PWD/.kshrc ~
 mkdir -p ~/.vim/autoload ~/.vim/bundle || true
-ln -sf $PWD/.vim/ftplugin $PWD/.vim/colors ~/.vim
+ln -sf $PWD/.vim/ftplugin $PWD/.vim/skeleton ~/.vim
 [ -e $HOME/.vim/autoload/pathogen.vim ] ||
 	curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
