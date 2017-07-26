@@ -1,0 +1,9 @@
+#!/bin/ksh
+
+grep $1 <<! | awk '{print $2}' | xargs mplayer
+blueheron http://sc6.shoutcaststreaming.us:8016
+hotmixjapan http://streaming.hotmixradio.fm/hotmixradio-japan-48.aac
+defcon http://ice2.somafm.com/defcon-128-aac
+pirate http://www.streamlicensing.com/directory/index.cgi/playlist.pls?action=playlist&type=pls&sid=2982&stream_id=9893
+epicrock http://192.99.62.212:9968
+!

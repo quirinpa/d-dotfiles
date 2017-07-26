@@ -1,11 +1,14 @@
 " set smarttab hidden
 " set mouse=a
-set list title tags=./tags cursorline
+set list title tags=./tags cursorline ruler incsearch
 set path+=** lazyredraw rnu nu fdm=marker "textwidth=80
-set wmnu wig+=*.o,*.class wim=longest,full
+set wmnu wig+=*.o,*.class wim=list,longest
+set autoindent
+" set backspace=indent,eol,start
 " ts=2 sw=2
 
-execute pathogen#infect()
+packadd! matchit
+
 syntax on
 filetype plugin indent on
 
@@ -69,6 +72,7 @@ nmap <leader>s :so %<cr>:echo "sourced"<cr>
 nmap <leader>sk :SkeletonLoad<space>
 nmap <leader>r :w<cr>:!. %<cr>
 nmap <leader>b :ls<cr>:b
+nmap <leader>j :jumps<cr>:jump 
 
 nmap <leader>. :<c-P><cr>
 nmap <leader><cr> :mak<cr><cr>
