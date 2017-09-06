@@ -14,5 +14,5 @@ xidle -timeout 300 -program "/usr/local/bin/xlock" &
 xmodmap $HOME/.xmodmaprc
 keynav &
 
+st -e screen &
 exec dwm
-exec st -e screen

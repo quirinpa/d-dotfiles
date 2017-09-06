@@ -16,9 +16,3 @@
 [submodule ".vim/pack/vim-unimpaired"]
 	path = .vim/pack/global/start/vim-unimpaired
 	url = https://github.com/tpope/vim-unimpaired
-[submodule ".vim/pack/vim-javascript"]
-	path = .vim/pack/javascript/opt/vim-javascript
-	url = https://github.com/pangloss/vim-javascript.git
-[submodule ".vim/pack/vim-jsx"]
-	path = .vim/pack/javascript/opt/vim-jsx
-	url = https://github.com/mxw/vim-jsx

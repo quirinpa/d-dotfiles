@@ -7,10 +7,12 @@ set autoindent
 " set backspace=indent,eol,start
 " ts=2 sw=2
 
-packadd! matchit
+" packadd! matchit
 
 syntax on
 filetype plugin indent on
+
+autocmd BufNewFile,BufRead *.jsx set ft=javascript.jsx
 
 " ReadSkeleton {{{
 function! ReadSkeleton(type)
@@ -28,8 +30,6 @@ hi OverLength ctermbg=1 ctermfg=white
 match OverLength /\%81v.\+/
 "}}}
 " MakeRun {{{
-set autowrite
-
 command! -nargs=1 MakeRun call SetMakeRun(<q-args>)
 
 function! SetMakeRun(onoff)
@@ -51,14 +51,14 @@ endfunction
 autocmd QuickfixCmdPost make call AfterMakeC()
 "}}}
 "Insert-mode maps {{{
-ino <C-E> <esc>A
-" Auto-Close {{{
-ino <buffer> " ""<left>
-ino <buffer> ' ''<left>
-ino <buffer> ( ()<left>
-ino <buffer> [ []<left>
-ino <buffer> { {}<left>
-"}}}
+ino <C-E> <End>
+"" Auto-Close {{{
+"ino <buffer> " ""<left>
+"ino <buffer> ' ''<left>
+"ino <buffer> ( ()<left>
+"ino <buffer> [ []<left>
+"ino <buffer> { {}<left>
+""}}}
 "}}}
 " Normal-mode maps {{{
 " Quick Options {{{
@@ -75,7 +75,8 @@ nmap <leader>b :ls<cr>:b
 nmap <leader>j :jumps<cr>:jump 
 
 nmap <leader>. :<c-P><cr>
-nmap <leader><cr> :mak<cr><cr>
+nmap <leader>m :mak<cr><cr>
+nmap <leader><cr> :w<cr>:mak<cr><cr>
 "}}}
 " Command-mode maps {{{
 cnoremap <C-A> <Home>
