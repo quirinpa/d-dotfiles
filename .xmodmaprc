@@ -1,28 +1,66 @@
-! shift       Shift_L (0x32),  Shift_R (0x3e)
-! lock        Caps_Lock (0x42)
-! control     Control_L (0x25),  Control_R (0x6d)
-! mod1        Alt_L (0x40),  Mode_switch (0x71),  Meta_L (0x9c)
-! mod2        Num_Lock (0x4d)
-! mod3      	Caps
-! mod4        Super_L (0x73),  Super_R (0x74),  Super_L (0x7f),  Hyper_L (0x80)
-! mod5        Mode_switch (0x8),  ISO_Level3_Shift (0x7c)
+! HHKB Style settings
+! I only have one at work!
 
-keycode 113 = Multi_key
-keycode 113 = Mode_switch
-keycode 117 = Mode_switch
+remove mod1 = Alt_L
+remove mod4 = Super_L
+keycode 115 = Alt_L
+add mod1 = Alt_L
 
-keysym m = m M Multi_key
-keysym i = i I Insert
-keysym h = h H Left Begin
-keysym j = j J Down Next
-keysym k = k K Up Prior
-keysym l = l L Right End
-keysym u = u U Prior
-keysym d = d D Next
+! left super
+keycode 64 = Mode_switch
+
+remove Control = Control_R
+keysym Control_R = Mode_switch
+
+remove mod1 = Alt_R
+remove mod4 = Super_R
+keycode 113 = Super_R
+keycode 116 = Alt_R
+add mod1 = Alt_R
+
+keysym Menu = Multi_key
+
+keysym Tab = Tab ISO_Left_Tab Multi_key
+
+keysym 1 = 1 exclam F1
+keysym 2 = 2 at F2
+keysym 3 = 3 numbersign F3
+keysym 4 = 4 dollar F4
+keysym 5 = 5 percent F5
+keysym 6 = 6 asciicircum F6
+keysym 7 = 7 ampersand F7
+keysym 8 = 8 asterisk F8
+keysym 9 = 9 parenleft F9
+keysym 0 = 0 parenright F10
+keysym minus = minus underscore F11
+keysym equal = equal plus F12
+
+keysym i = i I Print
+keysym o = o O Scroll_Lock
+keysym p = p P Pause
+
+keysym k = k K Home
+keysym comma = comma less End
+keysym l = l L Prior
+keysym period = period greater Next
+
+keysym bracketleft = bracketleft braceleft Up
+keysym semicolon = semicolon colon Left
+keysym apostrophe = apostrophe quotedbl Right
+keysym slash = slash question Down
+
+keysym BackSpace = Delete BackSpace BackSpace Clear
+
+keysym backslash = backslash bar Insert
+keysym grave = Escape Escape
+keysym Menu = grave asciitilde Delete
+keysym g = g G grave
+keysym t = t T asciitilde
 
 !escape reality here
 remove Lock = 66
 clear lock
-keycode 9 = Caps_Lock
-keycode 66 = Escape
-add Lock = Caps_Lock
+remove Control = Control_L
+keycode 66 = Control_L
+add Control = Control_L
+! add Lock = Caps_Lock

@@ -11,7 +11,9 @@ PATH=$HOME/bin:$PATH
 xrdb -load ~/.Xresources
 xidle -timeout 300 -program "/usr/local/bin/xlock" &
 
-xmodmap $HOME/.xmodmaprc
+[[ ! -e $HOME/.xmodmaprc ]] || \
+	xmodmap $HOME/.xmodmaprc
+
 keynav &
 
 st -e screen &
